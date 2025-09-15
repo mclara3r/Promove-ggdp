@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Armazenar datas</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/dn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css
+</head>
+<body class="p-4">
+
+  <h4>Escolha uma data:</h4>
+  <input type="text" id="datepicker" class="form-control mb-3">
+
+  <button class="btn btn-primary" onclick="mostrarDatas()">Ver datas armazenadas</button>
+
+  <p id="resultado" class="mt-3"></p>
+
+  https://cdn.jsdelivr.net/npm/flatpickr
+  <script>
+    // Variável para armazenar as datas
+    const datasSelecionadas = [];
+
+    // Inicializa o Flatpickr
+    flatpickr("#datepicker", {
+      dateFormat: "d/m/Y",
+      onChange: function(selectedDates, dateStr, instance) {
+        datasSelecionadas.push(dateStr); // Armazena a data selecionada
+      }
+    });
+
+    // Função para mostrar as datas armazenadas
+    function mostrarDatas() {
+      document.getElementById("resultado").innerText = "Datas armazenadas: " + datasSelecionadas.join(", ");
+    }
+  </script>
+
+</body>
+</html>
+
+
+        <div><br>
+
+            <h3 class="mb-4">Critérios Obrigatórios</h3><br>
+            <div class="container">
+                
+                <div class="row justify-content-start">
+                    <div class="row mb-3">
+                        <div class="card border-light mb-3" style="max-width: 18rem;">
+                        <div class="card-header">Aperfeiçoamento</div>
+                        <div class="card-body">
+                            <div class="col">
+                        
+                                <span class="card-title">
+                                <label for="aperfeiçoamento" class="form-label">Data da conclusão:</label>
+                                <input type="date" id="datac" class="form-control">
+                                </span>
+                                <p class="card-text"></p>
+                            <div class="col">
+                                <span class="card-title">
+                                <label for="aperfeiçoamento" class="form-label">Data da conclusão:</label>
+                                <input type="date" id="datac" class="form-control">
+                                </span>
+                            </div>
+                                
+                            </div>
+                        </div>
+                       
+                        </div>
+
+                        </div>                         
+                    </div>  

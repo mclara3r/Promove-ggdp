@@ -1,0 +1,18 @@
+body{
+    background-color: #edebe7;
+
+}
+.estilo1 {
+    background-color: #003b19;
+    color: #edebe7;
+    text-align: center;
+    
+}
+.estilo2 {
+    color: #003b19; 
+    margin-left: 180px;
+    margin-bottom: 24px;
+    margin-top: 24px;
+
+    text-decoration: underline;
+}

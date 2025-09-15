@@ -1,0 +1,2498 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROMOVE - Sistema de Produtividade dos Servidores de Goiás</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .title-font {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3), 0 0 40px rgba(16, 185, 129, 0.2);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .card-shadow {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899);
+            border-radius: 10px;
+        }
+        
+        .level-badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .tab-active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .input-focus:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        
+        .admin-badge {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+        
+        .animate-draw {
+            animation: draw 2s ease-in-out forwards;
+        }
+        
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        .periodo-btn.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="relative overflow-hidden py-12 px-4" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #334155 60%, #10b981 100%);">
+
+        
+
+        
+        <!-- Padrão sutil de ondas no fundo -->
+        <div class="absolute inset-0 opacity-5">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- Ondas suaves -->
+                    <pattern id="waves" width="200" height="100" patternUnits="userSpaceOnUse">
+                        <path d="M0,50 Q50,20 100,50 T200,50" fill="none" stroke="white" stroke-width="2" opacity="0.3"/>
+                        <path d="M0,70 Q50,40 100,70 T200,70" fill="none" stroke="white" stroke-width="1.5" opacity="0.2"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#waves)" />
+            </svg>
+        </div>
+        
+
+        
+        <div class="max-w-7xl mx-auto relative z-10">
+            <!-- Logo e Título -->
+            <div class="flex flex-col items-center">
+                <!-- Título centralizado -->
+                <div class="text-center">
+                    <h1 class="title-font text-6xl font-bold text-white drop-shadow-lg">PROMOVE</h1>
+                </div>
+                
+                <p class="text-center text-gray-200 text-lg font-medium">Sistema de Produtividade</p>
+                
+                <!-- Linha decorativa -->
+                <div class="flex justify-center mt-6">
+                    <div class="w-32 h-1 bg-gradient-to-r from-green-400 to-blue-400 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Tabs Navigation -->
+        <div class="bg-white p-2 rounded-xl card-shadow mb-8 overflow-x-auto">
+            <div class="flex gap-1 min-w-max">
+                <button onclick="showTab('administrador')" id="tab-administrador" class="tab-button px-4 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-gray-100 whitespace-nowrap text-sm">
+                    🔧 Administrador
+                </button>
+                <button onclick="showTab('visao-geral')" id="tab-visao-geral" class="tab-button tab-active px-4 py-3 rounded-lg font-medium transition-all duration-300 whitespace-nowrap text-sm">
+                    📊 Visão Geral
+                </button>
+                <button onclick="showTab('tempo-exercicio')" id="tab-tempo-exercicio" class="tab-button px-4 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-gray-100 whitespace-nowrap text-sm">
+                    ⏰ Tempo de Exercício
+                </button>
+                <button onclick="showTab('avaliacao')" id="tab-avaliacao" class="tab-button px-4 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-gray-100 whitespace-nowrap text-sm">
+                    📋 Avaliação
+                </button>
+                <button onclick="showTab('aperfeicoamento')" id="tab-aperfeicoamento" class="tab-button px-4 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-gray-100 whitespace-nowrap text-sm">
+                    🎓 Aperfeiçoamento
+                </button>
+                <button onclick="showTab('responsabilidade-titulacao')" id="tab-responsabilidade-titulacao" class="tab-button px-4 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-gray-100 whitespace-nowrap text-sm">
+                    🏆 Responsabilidade e Titulação
+                </button>
+                <button onclick="showTab('graficos')" id="tab-graficos" class="tab-button px-4 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-gray-100 whitespace-nowrap text-sm">
+                    📈 Gráficos e Análises
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab Content: Administrador -->
+        <div id="content-administrador" class="tab-content hidden">
+            <div class="space-y-8">
+                <!-- Cabeçalho Admin -->
+                <div class="admin-badge text-white p-6 rounded-xl text-center">
+                    <h2 class="text-2xl font-bold">🔧 Painel Administrativo</h2>
+                    <p class="text-red-100 mt-2">Área restrita para administradores do sistema</p>
+                </div>
+
+                <!-- Cadastro de Servidor -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-xl font-semibold mb-6 text-gray-800 border-b border-gray-200 pb-3">
+                        👤 Cadastro de Servidor
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Dados Pessoais -->
+                        <div class="lg:col-span-3">
+                            <h4 class="font-semibold text-lg mb-4 text-blue-600">Dados Pessoais</h4>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nome Completo *</label>
+                            <input type="text" id="admin-nome" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="Nome completo do servidor">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">CPF *</label>
+                            <input type="text" id="admin-cpf" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="000.000.000-00" maxlength="14">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Data de Nascimento *</label>
+                            <input type="date" id="admin-nascimento" class="w-full p-3 border border-gray-300 rounded-lg input-focus">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Telefone</label>
+                            <input type="tel" id="admin-telefone" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="(00) 00000-0000">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">E-mail *</label>
+                            <input type="email" id="admin-email" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="servidor@exemplo.gov.br">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Endereço</label>
+                            <input type="text" id="admin-endereco" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="Rua, número, bairro, cidade">
+                        </div>
+
+                        <!-- Dados Organizacionais -->
+                        <div class="lg:col-span-3 mt-6">
+                            <h4 class="font-semibold text-lg mb-4 text-green-600">Dados Organizacionais</h4>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Órgão de Origem *</label>
+                            <select id="admin-orgao-origem" class="w-full p-3 border border-gray-300 rounded-lg input-focus">
+                                <option value="">Selecione o órgão</option>
+                                <option value="SEF">Secretaria de Estado da Fazenda</option>
+                                <option value="SEPLAG">Secretaria de Estado de Planejamento</option>
+                                <option value="SEGOV">Secretaria de Estado de Governo</option>
+                                <option value="SEJUSP">Secretaria de Estado de Justiça e Segurança Pública</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Órgão de Lotação *</label>
+                            <select id="admin-orgao-lotacao" class="w-full p-3 border border-gray-300 rounded-lg input-focus">
+                                <option value="">Selecione a lotação</option>
+                                <option value="SUPARR">Superintendência de Arrecadação</option>
+                                <option value="SUPFIS">Superintendência de Fiscalização</option>
+                                <option value="SUPCON">Superintendência de Controle</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Unidade de Trabalho *</label>
+                            <select id="admin-unidade-trabalho" class="w-full p-3 border border-gray-300 rounded-lg input-focus">
+                                <option value="">Selecione a unidade</option>
+                                <option value="GERFIS">Gerência de Fiscalização</option>
+                                <option value="GERARR">Gerência de Arrecadação</option>
+                                <option value="GERCON">Gerência de Controle</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Cargo *</label>
+                            <select id="admin-cargo" class="w-full p-3 border border-gray-300 rounded-lg input-focus">
+                                <option value="">Selecione o cargo</option>
+                                <option value="analista">Analista Administrativo</option>
+                                <option value="tecnico">Técnico Administrativo</option>
+                                <option value="auditor">Auditor Fiscal</option>
+                                <option value="procurador">Procurador do Estado</option>
+                            </select>
+                        </div>
+
+                        <!-- Dados da Chefia -->
+                        <div class="lg:col-span-3 mt-6">
+                            <h4 class="font-semibold text-lg mb-4 text-purple-600">Dados da Chefia</h4>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nome da Chefia Imediata</label>
+                            <input type="text" id="admin-nome-chefia" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="Nome do chefe imediato">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Cargo da Chefia</label>
+                            <input type="text" id="admin-cargo-chefia" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="Ex: Gerente, Diretor, Coordenador">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Contato da Chefia</label>
+                            <input type="email" id="admin-contato-chefia" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="chefia@exemplo.gov.br">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 flex gap-4">
+                        <button onclick="salvarServidor()" class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                            💾 Salvar Servidor
+                        </button>
+                        <button onclick="limparFormulario()" class="px-8 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium">
+                            🗑️ Limpar Formulário
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cadastro de Unidades -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-xl font-semibold mb-6 text-gray-800 border-b border-gray-200 pb-3">
+                        🏢 Cadastro de Unidades de Trabalho
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <input type="text" id="codigo-unidade" placeholder="Código da Unidade" class="p-3 border border-gray-300 rounded-lg input-focus">
+                        <input type="text" id="nome-unidade" placeholder="Nome da Unidade" class="p-3 border border-gray-300 rounded-lg input-focus">
+                        <select id="orgao-unidade" class="p-3 border border-gray-300 rounded-lg input-focus">
+                            <option value="">Órgão Responsável</option>
+                            <option value="SEF">Secretaria da Fazenda</option>
+                            <option value="SEPLAG">Secretaria de Planejamento</option>
+                        </select>
+                        <button onclick="adicionarUnidade()" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                            ➕ Adicionar
+                        </button>
+                    </div>
+                    
+                    <div id="lista-unidades" class="space-y-2 max-h-60 overflow-y-auto">
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <span class="font-medium">GERFIS - Gerência de Fiscalização</span>
+                                <span class="text-gray-600 ml-2">(SEF)</span>
+                            </div>
+                            <button class="text-red-600 hover:text-red-800">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configuração de Níveis por Carreira -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-xl font-semibold mb-6 text-gray-800 border-b border-gray-200 pb-3">
+                        📊 Configuração de Níveis por Carreira
+                    </h3>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Selecionar Carreira</label>
+                        <select id="carreira-selecionada" class="w-full md:w-1/2 p-3 border border-gray-300 rounded-lg input-focus" onchange="carregarNiveisCarreira()">
+                            <option value="administrativa">Carreira Administrativa</option>
+                            <option value="fiscal">Carreira Fiscal</option>
+                            <option value="juridica">Carreira Jurídica</option>
+                            <option value="tecnica">Carreira Técnica</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Configuração de Níveis -->
+                        <div>
+                            <h4 class="font-semibold text-lg mb-4 text-orange-600">Configurar Níveis</h4>
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-3 gap-4">
+                                    <input type="text" id="nivel-letra" placeholder="Nível (A-S)" maxlength="1" class="p-3 border border-gray-300 rounded-lg input-focus text-center">
+                                    <input type="number" id="pontos-minimos" placeholder="Pontos Mínimos" class="p-3 border border-gray-300 rounded-lg input-focus">
+                                    <button onclick="adicionarNivel()" class="px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+                                        ➕
+                                    </button>
+                                </div>
+                                
+                                <div id="lista-niveis-carreira" class="space-y-2 max-h-60 overflow-y-auto">
+                                    <!-- Níveis da carreira selecionada -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Pesos por Critério -->
+                        <div>
+                            <h4 class="font-semibold text-lg mb-4 text-pink-600">Pesos dos Critérios (%)</h4>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <label class="text-gray-700">Tempo de Exercício:</label>
+                                    <input type="number" id="peso-tempo" value="10" min="0" max="100" class="w-20 p-2 border border-gray-300 rounded input-focus text-center">
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <label class="text-gray-700">Avaliação de Desempenho:</label>
+                                    <input type="number" id="peso-desempenho" value="75" min="0" max="100" class="w-20 p-2 border border-gray-300 rounded input-focus text-center">
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <label class="text-gray-700">Aperfeiçoamento:</label>
+                                    <input type="number" id="peso-aperfeicoamento" value="15" min="0" max="100" class="w-20 p-2 border border-gray-300 rounded input-focus text-center">
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <label class="text-gray-700">Responsabilidade:</label>
+                                    <input type="number" id="peso-responsabilidade" value="50" min="0" max="100" class="w-20 p-2 border border-gray-300 rounded input-focus text-center">
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <label class="text-gray-700">Titulação:</label>
+                                    <input type="number" id="peso-titulacao" value="50" min="0" max="100" class="w-20 p-2 border border-gray-300 rounded input-focus text-center">
+                                </div>
+                                
+                                <button onclick="salvarPesos()" class="w-full px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors mt-4">
+                                    💾 Salvar Configurações
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Servidores Cadastrados -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-xl font-semibold mb-6 text-gray-800 border-b border-gray-200 pb-3">
+                        👥 Servidores Cadastrados
+                    </h3>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left">Nome</th>
+                                    <th class="px-4 py-3 text-left">CPF</th>
+                                    <th class="px-4 py-3 text-left">Cargo</th>
+                                    <th class="px-4 py-3 text-left">Unidade</th>
+                                    <th class="px-4 py-3 text-left">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-servidores">
+                                <tr class="border-b">
+                                    <td class="px-4 py-3">João Silva</td>
+                                    <td class="px-4 py-3">123.456.789-00</td>
+                                    <td class="px-4 py-3">Analista Administrativo</td>
+                                    <td class="px-4 py-3">GERFIS</td>
+                                    <td class="px-4 py-3">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-2">✏️</button>
+                                        <button class="text-red-600 hover:text-red-800">🗑️</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Visão Geral -->
+        <div id="content-visao-geral" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Perfil do Servidor -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl p-6 card-shadow">
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Perfil do Servidor</h3>
+                        
+                        <!-- Dados Pessoais -->
+                        <div class="text-center mb-6">
+                            <div class="w-24 h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                                JS
+                            </div>
+                            <input type="text" id="nome-servidor" placeholder="Nome do Servidor" class="w-full p-3 border border-gray-300 rounded-lg input-focus mb-3" value="João Silva">
+                            <input type="text" id="cargo-servidor" placeholder="Cargo" class="w-full p-3 border border-gray-300 rounded-lg input-focus mb-3" value="Analista Administrativo">
+                        </div>
+
+                        <!-- Nível e Progresso -->
+                        <div class="text-center mb-6">
+                            <div class="level-badge text-white px-6 py-3 rounded-full text-xl font-bold mb-3">
+                                Nível <span id="nivel-atual">A</span>
+                            </div>
+                            <p class="text-gray-600 mb-1">Pontos Atuais: <span id="pontos-atuais" class="font-semibold text-blue-600">46</span></p>
+                            <p class="text-gray-600 mb-4">Próximo Nível: <span id="pontos-faltam" class="font-semibold text-purple-600">2 pontos</span></p>
+                            
+                            <!-- Barra de Progresso -->
+                            <div class="mb-6">
+                                <div class="flex justify-between text-sm text-gray-600 mb-2">
+                                    <span>Progresso no Nível</span>
+                                    <span id="progresso-percent">96%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-3">
+                                    <div id="barra-progresso" class="progress-bar h-3 rounded-full" style="width: 96%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Informações Organizacionais -->
+                        <div class="space-y-3 mb-6">
+                            <h4 class="font-semibold text-gray-700 text-sm uppercase tracking-wide">Informações Organizacionais</h4>
+                            
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Órgão de Origem</label>
+                                <input type="text" id="orgao-origem" placeholder="Ex: Secretaria de Estado da Fazenda" class="w-full p-2 text-sm border border-gray-300 rounded-lg input-focus" value="Secretaria de Estado da Fazenda">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Órgão de Lotação</label>
+                                <input type="text" id="orgao-lotacao" placeholder="Ex: Superintendência de Arrecadação" class="w-full p-2 text-sm border border-gray-300 rounded-lg input-focus" value="Superintendência de Arrecadação">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Unidade de Trabalho</label>
+                                <input type="text" id="unidade-trabalho" placeholder="Ex: Gerência de Fiscalização" class="w-full p-2 text-sm border border-gray-300 rounded-lg input-focus" value="Gerência de Fiscalização">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Chefia Imediata</label>
+                                <input type="text" id="chefia-imediata" placeholder="Ex: Maria Santos - Gerente" class="w-full p-2 text-sm border border-gray-300 rounded-lg input-focus" value="Maria Santos - Gerente de Fiscalização">
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <!-- Resumo de Pontuações -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl p-6 card-shadow">
+                        <h3 class="text-xl font-semibold mb-6 text-gray-800">Resumo de Pontuações</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Critérios Obrigatórios -->
+                            <div class="space-y-4">
+                                <h4 class="font-semibold text-lg text-blue-600 border-b border-blue-200 pb-2">Critérios Obrigatórios (100%)</h4>
+                                
+                                <div class="bg-blue-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-gray-700">Tempo de Exercício (10%)</span>
+                                        <span id="pontos-tempo" class="font-semibold text-blue-600">4.8 pts</span>
+                                    </div>
+                                    <div class="text-sm text-gray-600">
+                                        <span id="dias-trabalhados">720</span> dias × 0.0067 pts
+                                    </div>
+                                </div>
+
+                                <div class="bg-green-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-gray-700">Desempenho (75%)</span>
+                                        <span id="pontos-desempenho" class="font-semibold text-green-600">8.5 pts</span>
+                                    </div>
+                                    <div class="text-sm text-gray-600 space-y-1">
+                                        <div>Resultados (70%): <span id="pontos-resultados">6.0 pts</span></div>
+                                        <div>Competência Técnica (20%): <span id="pontos-tecnica">1.8 pts</span></div>
+                                        <div>Competência Comportamental (10%): <span id="pontos-comportamental">0.7 pts</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-purple-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-gray-700">Aperfeiçoamento (15%)</span>
+                                        <span id="pontos-aperfeicoamento" class="font-semibold text-purple-600">7.2 pts</span>
+                                    </div>
+                                    <div class="text-sm text-gray-600">
+                                        <span id="horas-cursos">80</span> horas × 0.09 pts
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Critérios Aceleradores -->
+                            <div class="space-y-4">
+                                <h4 class="font-semibold text-lg text-orange-600 border-b border-orange-200 pb-2">Critérios Aceleradores</h4>
+                                
+                                <div class="bg-orange-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-gray-700">Responsabilidade (50%)</span>
+                                        <span id="pontos-responsabilidade" class="font-semibold text-orange-600">12.0 pts</span>
+                                    </div>
+                                    <div class="text-sm text-gray-600">
+                                        <div id="lista-responsabilidades">
+                                            <div>Chefia de Setor: 24 meses</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-pink-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-gray-700">Titulação (50%)</span>
+                                        <span id="pontos-titulacao" class="font-semibold text-pink-600">14.0 pts</span>
+                                    </div>
+                                    <div class="text-sm text-gray-600">
+                                        <div id="lista-titulacoes">
+                                            <div>Graduação: 6 pts</div>
+                                            <div>Especialização: 8 pts</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="mt-6 pt-4 border-t border-gray-200">
+                            <div class="flex justify-between items-center text-xl font-bold">
+                                <span class="text-gray-800">Pontuação Total:</span>
+                                <span id="pontuacao-total" class="text-blue-600">46.5 pontos</span>
+                            </div>
+                        </div>
+
+                        <!-- Botões de Ação -->
+                        <div class="mt-6 pt-4 border-t border-gray-200">
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <button onclick="confirmarCiencia()" class="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium">
+                                    ✅ Estou Ciente das Pontuações
+                                </button>
+                                <button onclick="abrirRecurso()" class="flex-1 px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-medium">
+                                    📝 Entrar com Recurso
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Tempo de Exercício -->
+        <div id="content-tempo-exercicio" class="tab-content hidden">
+            <div class="bg-white rounded-xl p-6 card-shadow">
+                <h3 class="text-xl font-semibold mb-6 text-gray-800">Controle de Tempo de Efetivo Exercício</h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-semibold text-lg mb-4 text-blue-600">Registro de Afastamentos</h4>
+                        <div class="space-y-4">
+                            <div class="flex gap-4">
+                                <input type="date" id="data-falta" class="flex-1 p-3 border border-gray-300 rounded-lg input-focus">
+                                <select id="tipo-falta" class="flex-1 p-3 border border-gray-300 rounded-lg input-focus">
+                                    <option value="licenca-saude">I - Licença para tratamento de saúde (>180 dias)</option>
+                                    <option value="doenca-compulsoria">II - Afastamento por doença de notificação compulsória (>180 dias)</option>
+                                    <option value="licenca-familia">III - Licença por doença em pessoa da família</option>
+                                    <option value="competicao-esportiva">IV - Participação em competição esportiva</option>
+                                    <option value="cessao-externa">V - Cessão para órgão externo ao Poder Executivo estadual</option>
+                                    <option value="cessao-organizacao">VI - Cessão para organizações sociais (áreas diversas)</option>
+                                    <option value="mandato-eletivo">VII - Exercício de mandato eletivo</option>
+                                    <option value="mandato-classista">VIII - Licença para mandato classista</option>
+                                    <option value="mandato-diretivo">IX - Mandato diretivo em empresa pública/sociedade de economia mista</option>
+                                    <option value="treinamento-pos">X - Afastamento para treinamento/pós-graduação stricto sensu</option>
+                                    <option value="outros-cargos">XI - Exercício em outros cargos efetivos anteriores</option>
+                                    <option value="cargos-comissionados">XII - Exercício em cargos comissionados não concomitantes</option>
+                                    <option value="periodo-anterior">XIII - Período anterior ao enquadramento/aproveitamento</option>
+                                    <option value="inabilitacao">XIV - Inabilitação por penalidade disciplinar</option>
+                                    <option value="interesses-particulares">XV - Licença para tratar de interesses particulares</option>
+                                    <option value="falta-injustificada">XVI - Falta injustificada</option>
+                                </select>
+                            </div>
+                            
+                            <button onclick="adicionarFalta()" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                                📝 Registrar Afastamento
+                            </button>
+                            
+                            <div id="lista-faltas" class="space-y-2 max-h-60 overflow-y-auto">
+                                <!-- Faltas serão listadas aqui -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-lg mb-4 text-green-600">Resumo do Período</h4>
+                        <div class="bg-gray-50 p-6 rounded-lg space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Data de Início no Cargo:</span>
+                                <input type="date" id="data-inicio" class="p-2 border border-gray-300 rounded input-focus" value="2022-01-15">
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Dias Totais:</span>
+                                <span id="dias-totais" class="font-semibold">750</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Faltas Registradas:</span>
+                                <span id="total-faltas" class="font-semibold text-red-600">30</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Dias Efetivos:</span>
+                                <span id="dias-efetivos" class="font-semibold text-green-600">720</span>
+                            </div>
+                            <div class="flex justify-between text-lg font-bold border-t pt-4">
+                                <span class="text-gray-800">Pontuação por Tempo:</span>
+                                <span id="pontos-tempo-calc" class="text-blue-600">4.82 pts</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mt-2">
+                                Cada dia efetivo = 0.0067 pontos
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Avaliação de Desempenho -->
+        <div id="content-avaliacao" class="tab-content hidden">
+            <div class="space-y-8">
+                <!-- Avaliação de Resultados -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-xl font-semibold mb-6 text-gray-800">Avaliação de Resultados (70% do Desempenho)</h3>
+                    
+                    <!-- Período de Avaliação -->
+                    <div class="mb-6 p-4 bg-blue-50 rounded-lg">
+                        <h4 class="font-semibold text-lg mb-4 text-blue-600">Período de Avaliação</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Data Inicial *</label>
+                                <input type="date" id="data-inicial-avaliacao" class="w-full p-3 border border-gray-300 rounded-lg input-focus" value="2023-01-01">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Data Final *</label>
+                                <input type="date" id="data-final-avaliacao" class="w-full p-3 border border-gray-300 rounded-lg input-focus" value="2023-12-31">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 p-3 bg-white rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700 font-medium">Período de Avaliação:</span>
+                                <span id="periodo-avaliacao" class="text-blue-600 font-semibold">01/01/2023 a 31/12/2023 (365 dias)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Entregas (Descreva o que será entregue)</label>
+                            <textarea id="descricao-entregas" class="w-full p-3 border border-gray-300 rounded-lg input-focus h-24" placeholder="Ex: Relatório mensal de vendas, Sistema de controle de estoque, etc.">Relatório mensal de vendas e análise de performance</textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Quantidade (1 a 10.000)</label>
+                            <input type="number" id="quantidade-entregas" min="1" max="10000" value="25" class="w-full p-3 border border-gray-300 rounded-lg input-focus" placeholder="Quantidade de entregas">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tempo (Horas)</label>
+                            <div class="flex gap-2">
+                                <input type="time" id="hora-inicio" value="08:00" class="flex-1 p-3 border border-gray-300 rounded-lg input-focus">
+                                <input type="time" id="hora-fim" value="17:00" class="flex-1 p-3 border border-gray-300 rounded-lg input-focus">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Qualidade da Entrega (Descreva)</label>
+                            <textarea id="descricao-qualidade" class="w-full p-3 border border-gray-300 rounded-lg input-focus h-24" placeholder="Ex: Relatórios sem erros, entregues no prazo, com análises detalhadas...">Relatórios precisos, entregues no prazo, com análises detalhadas e sugestões de melhoria</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Avaliação Geral dos Resultados (70%)</label>
+                        <select id="avaliacao-resultados" class="w-full p-4 border border-gray-300 rounded-lg input-focus text-lg" onchange="calcularDesempenho()">
+                            <option value="5">Excepcional (5)</option>
+                            <option value="4" selected>Ótimo (4)</option>
+                            <option value="3">Bom (3)</option>
+                            <option value="2">Regular (2)</option>
+                            <option value="1">Ruim (1)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-700 font-medium">Pontuação de Resultados:</span>
+                            <span id="pontos-resultados-calc" class="text-xl font-bold text-blue-600">7.98 pts</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mt-2">
+                            Avaliação: <span id="nota-resultados">4</span> × 1.596 (fator de conversão para 70% de 11.4 pts)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Competência Técnica -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-xl font-semibold mb-6 text-gray-800">Competência Técnica (20% do Desempenho)</h3>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Avaliação Técnica</label>
+                        <select id="tipo-avaliacao-tecnica" class="w-full md:w-1/2 p-3 border border-gray-300 rounded-lg input-focus" onchange="alterarTipoAvaliacaoTecnica()">
+                            <option value="geral">Função Geral</option>
+                            <option value="chefe">Função de Chefia</option>
+                        </select>
+                    </div>
+                    
+                    <div id="competencias-tecnicas-geral" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Legislação</label>
+                            <input type="text" id="desc-legislacao" placeholder="Ex: Lei 8.666/93, Constituição Federal..." class="w-full p-3 border border-gray-300 rounded-lg input-focus mb-3" value="Lei 8.666/93, Lei 14.133/21">
+                            <select id="comp-legislacao" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4" selected>Ótimo (4)</option>
+                                <option value="3">Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Sistemas</label>
+                            <input type="text" id="desc-sistemas" placeholder="Ex: SIAFI, COMPRASNET, SAP..." class="w-full p-3 border border-gray-300 rounded-lg input-focus mb-3" value="SIAFI, COMPRASNET, Excel Avançado">
+                            <select id="comp-sistemas" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4">Ótimo (4)</option>
+                                <option value="3" selected>Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Outros Conhecimentos</label>
+                            <input type="text" id="desc-outros" placeholder="Ex: Inglês, Gestão de Projetos..." class="w-full p-3 border border-gray-300 rounded-lg input-focus mb-3" value="Gestão de Projetos, Inglês Intermediário">
+                            <select id="comp-outros" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4" selected>Ótimo (4)</option>
+                                <option value="3">Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Competências Técnicas para Função de Chefia -->
+                    <div id="competencias-tecnicas-chefe" class="grid grid-cols-1 md:grid-cols-3 gap-6 hidden">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Gestão Orçamentária</label>
+                            <input type="text" id="desc-orcamentaria" placeholder="Ex: LOA, LDO, Execução Orçamentária..." class="w-full p-3 border border-gray-300 rounded-lg input-focus mb-3" value="LOA, LDO, SIAFI Gerencial">
+                            <select id="comp-orcamentaria" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4" selected>Ótimo (4)</option>
+                                <option value="3">Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Gestão de Pessoas</label>
+                            <input type="text" id="desc-pessoas" placeholder="Ex: Avaliação de Desempenho, RH..." class="w-full p-3 border border-gray-300 rounded-lg input-focus mb-3" value="Avaliação de Desempenho, SIGRH">
+                            <select id="comp-pessoas" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4">Ótimo (4)</option>
+                                <option value="3" selected>Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Planejamento Estratégico</label>
+                            <input type="text" id="desc-estrategico" placeholder="Ex: PPA, Indicadores, Metas..." class="w-full p-3 border border-gray-300 rounded-lg input-focus mb-3" value="PPA, Indicadores de Performance">
+                            <select id="comp-estrategico" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4" selected>Ótimo (4)</option>
+                                <option value="3">Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 p-4 bg-green-50 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-700 font-medium">Pontuação Técnica:</span>
+                            <span id="pontos-tecnica-calc" class="text-xl font-bold text-green-600">2.51 pts</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mt-2">
+                            Média: <span id="media-tecnica">3.67</span> × 0.684 (fator de conversão para 20% de 11.4 pts)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Competência Comportamental -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-xl font-semibold mb-6 text-gray-800">Competência Comportamental (10% do Desempenho)</h3>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Avaliação</label>
+                        <select id="tipo-avaliacao-comportamental" class="w-full md:w-1/2 p-3 border border-gray-300 rounded-lg input-focus" onchange="alterarTipoAvaliacao()">
+                            <option value="geral">Função Geral</option>
+                            <option value="chefe">Função de Chefia</option>
+                        </select>
+                    </div>
+                    
+                    <div id="competencias-geral" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Relacionamento Interpessoal</label>
+                            <select id="comp-relacionamento" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4" selected>Ótimo (4)</option>
+                                <option value="3">Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Iniciativa e Proatividade</label>
+                            <select id="comp-iniciativa" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4">Ótimo (4)</option>
+                                <option value="3" selected>Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Comunicação</label>
+                            <select id="comp-comunicacao" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4" selected>Ótimo (4)</option>
+                                <option value="3">Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Trabalho em Equipe</label>
+                            <select id="comp-equipe" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4">Ótimo (4)</option>
+                                <option value="3" selected>Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Adaptabilidade</label>
+                            <select id="comp-adaptabilidade" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4">Ótimo (4)</option>
+                                <option value="3" selected>Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Ética Profissional</label>
+                            <select id="comp-etica" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4" selected>Ótimo (4)</option>
+                                <option value="3">Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Competências para Função de Chefia -->
+                    <div id="competencias-chefe" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Liderança</label>
+                            <select id="comp-lideranca" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4" selected>Ótimo (4)</option>
+                                <option value="3">Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Gestão de Equipe</label>
+                            <select id="comp-gestao-equipe" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4">Ótimo (4)</option>
+                                <option value="3" selected>Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tomada de Decisão</label>
+                            <select id="comp-decisao" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4" selected>Ótimo (4)</option>
+                                <option value="3">Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Planejamento e Organização</label>
+                            <select id="comp-planejamento" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4">Ótimo (4)</option>
+                                <option value="3" selected>Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Comunicação Gerencial</label>
+                            <select id="comp-comunicacao-gerencial" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4" selected>Ótimo (4)</option>
+                                <option value="3">Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Gestão de Conflitos</label>
+                            <select id="comp-conflitos" class="w-full p-3 border border-gray-300 rounded-lg input-focus" onchange="calcularDesempenho()">
+                                <option value="5">Excepcional (5)</option>
+                                <option value="4">Ótimo (4)</option>
+                                <option value="3" selected>Bom (3)</option>
+                                <option value="2">Regular (2)</option>
+                                <option value="1">Ruim (1)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 p-4 bg-purple-50 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-700 font-medium">Pontuação Comportamental:</span>
+                            <span id="pontos-comportamental-calc" class="text-xl font-bold text-purple-600">0.80 pts</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mt-2">
+                            Média: <span id="media-comportamental">3.5</span> × 0.228 (fator de conversão para 10% de 11.4 pts)
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- Tab Content: Aperfeiçoamento -->
+        <div id="content-aperfeicoamento" class="tab-content hidden">
+            <div class="bg-white rounded-xl p-6 card-shadow">
+                <h3 class="text-xl font-semibold mb-6 text-gray-800">Cursos de Aperfeiçoamento</h3>
+                
+                <div class="mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <input type="text" id="nome-curso" placeholder="Nome do Curso" class="p-3 border border-gray-300 rounded-lg input-focus">
+                        <input type="number" id="carga-horaria" placeholder="Carga Horária (60-100h)" min="60" max="100" class="p-3 border border-gray-300 rounded-lg input-focus">
+                        <button onclick="adicionarCurso()" class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                            Adicionar Curso
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="lista-cursos" class="space-y-3">
+                    <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <span class="font-medium">Gestão Pública Avançada</span>
+                            <span class="text-gray-600 ml-2">(80h)</span>
+                        </div>
+                        <span class="text-purple-600 font-semibold">7.2 pts</span>
+                    </div>
+                </div>
+                
+                <div class="mt-6 p-4 bg-purple-50 rounded-lg">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700 font-medium">Total de Pontos por Cursos:</span>
+                        <span id="total-pontos-cursos" class="text-xl font-bold text-purple-600">7.2 pts</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Responsabilidade e Titulação -->
+        <div id="content-responsabilidade-titulacao" class="tab-content hidden">
+            <div class="space-y-8">
+                <!-- Gestão de Responsabilidades -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-xl font-semibold mb-6 text-gray-800">Assunção de Responsabilidade</h3>
+                    
+                    <div class="mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <select id="tipo-responsabilidade" class="p-3 border border-gray-300 rounded-lg input-focus">
+                                <option value="chefia">Chefia</option>
+                                <option value="assessor">Assessor</option>
+                                <option value="coordenacao">Coordenação</option>
+                                <option value="supervisao">Supervisão</option>
+                            </select>
+                            <input type="date" id="inicio-responsabilidade" class="p-3 border border-gray-300 rounded-lg input-focus">
+                            <input type="date" id="fim-responsabilidade" class="p-3 border border-gray-300 rounded-lg input-focus">
+                            <button onclick="adicionarResponsabilidade()" class="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+                                Adicionar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="lista-responsabilidades-detalhada" class="space-y-3">
+                        <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <span class="font-medium">Chefia de Setor</span>
+                                <span class="text-gray-600 ml-2">(24 meses)</span>
+                            </div>
+                            <span class="text-orange-600 font-semibold">12.0 pts</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gestão de Titulação -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-xl font-semibold mb-6 text-gray-800">Titulação</h3>
+                    
+                    <div class="mb-6">
+                        <h4 class="font-semibold text-lg mb-4 text-pink-600">Adicionar Certificado</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <select id="tipo-titulacao" class="p-3 border border-gray-300 rounded-lg input-focus">
+                                <option value="graduacao">Graduação (6 pts)</option>
+                                <option value="especializacao">Especialização (8 pts)</option>
+                                <option value="mestrado">Mestrado (24 pts)</option>
+                                <option value="doutorado">Doutorado (48 pts)</option>
+                            </select>
+                            <input type="text" id="nome-titulacao" placeholder="Nome do Curso/Instituição" class="p-3 border border-gray-300 rounded-lg input-focus">
+                            <input type="date" id="data-titulacao" class="p-3 border border-gray-300 rounded-lg input-focus">
+                            <button onclick="adicionarTitulacao()" class="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+                                Adicionar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="lista-titulacoes-detalhada" class="space-y-3 mb-6">
+                        <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <span class="font-medium">Administração Pública - UFMG</span>
+                                <span class="text-gray-600 ml-2">(Graduação - 15/12/2018)</span>
+                            </div>
+                            <span class="text-pink-600 font-semibold">6 pts</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <span class="font-medium">Gestão Pública - FGV</span>
+                                <span class="text-gray-600 ml-2">(Especialização - 20/06/2020)</span>
+                            </div>
+                            <span class="text-pink-600 font-semibold">8 pts</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-pink-50 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-700 font-medium">Total de Pontos por Titulação:</span>
+                            <span id="total-pontos-titulacao" class="text-xl font-bold text-pink-600">14 pts</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Gráficos e Análises -->
+        <div id="content-graficos" class="tab-content hidden">
+            <div class="space-y-8">
+                <!-- Progressão na Carreira -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-xl font-semibold mb-6 text-gray-800">📊 Progressão na Carreira (A-S)</h3>
+                    
+                    <!-- Escala Visual da Carreira -->
+                    <div class="mb-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-semibold text-lg text-blue-600">Sua Posição na Carreira</h4>
+                            <div class="text-right">
+                                <div class="text-2xl font-bold text-blue-600" id="nivel-grafico">Nível A</div>
+                                <div class="text-sm text-gray-600" id="pontos-grafico">46.5 pontos</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Escala de Níveis -->
+                        <div class="relative">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-xs text-gray-500">A (0 pts)</span>
+                                <span class="text-xs text-gray-500">S (864 pts)</span>
+                            </div>
+                            
+                            <!-- Barra de Progresso Principal -->
+                            <div class="relative h-8 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="barra-carreira" class="h-full bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 rounded-full transition-all duration-1000" style="width: 5.4%"></div>
+                                
+                                <!-- Indicador de Posição Atual -->
+                                <div id="indicador-posicao" class="absolute top-0 h-full w-1 bg-red-500 shadow-lg transition-all duration-1000" style="left: 5.4%">
+                                    <div class="absolute -top-8 -left-6 bg-red-500 text-white px-2 py-1 rounded text-xs font-bold">
+                                        VOCÊ
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Marcadores de Níveis -->
+                            <div class="flex justify-between mt-2" id="marcadores-niveis">
+                                <!-- Marcadores serão gerados dinamicamente -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detalhes dos Níveis -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 rounded-xl">
+                            <h5 class="font-semibold text-lg text-blue-700 mb-4">🎯 Próximo Nível</h5>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-700">Nível Atual:</span>
+                                    <span class="font-bold text-blue-600" id="nivel-atual-detalhes">A</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-700">Próximo Nível:</span>
+                                    <span class="font-bold text-green-600" id="proximo-nivel">B</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-700">Pontos Necessários:</span>
+                                    <span class="font-bold text-orange-600" id="pontos-necessarios">1.5 pts</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-700">Progresso:</span>
+                                    <span class="font-bold text-purple-600" id="progresso-nivel">96.9%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-green-50 to-emerald-100 p-6 rounded-xl">
+                            <h5 class="font-semibold text-lg text-green-700 mb-4">🚀 Projeção de Crescimento</h5>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-700">Em 1 ano:</span>
+                                    <span class="font-bold text-green-600" id="projecao-1ano">Nível B</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-700">Em 3 anos:</span>
+                                    <span class="font-bold text-blue-600" id="projecao-3anos">Nível C</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-700">Em 5 anos:</span>
+                                    <span class="font-bold text-purple-600" id="projecao-5anos">Nível D</span>
+                                </div>
+                                <div class="text-xs text-gray-600 mt-3">
+                                    * Baseado no crescimento médio atual
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dicas para Evolução -->
+                    <div class="mt-8 bg-gradient-to-br from-yellow-50 to-orange-100 rounded-xl p-6">
+                        <h5 class="font-semibold text-lg text-orange-700 mb-4">💡 Dicas para Alcançar o Próximo Nível</h5>
+                        <div id="dicas-evolucao" class="space-y-4">
+                            <!-- Dicas serão geradas dinamicamente -->
+                        </div>
+                    </div>
+                    
+                    <!-- Estatísticas da Carreira -->
+                    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl text-center">
+                            <div class="text-3xl font-bold text-blue-600" id="tempo-carreira">2.1</div>
+                            <div class="text-sm text-blue-700 font-medium">Anos na Carreira</div>
+                            <div class="text-xs text-gray-600 mt-1">Desde o ingresso</div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl text-center">
+                            <div class="text-3xl font-bold text-purple-600" id="velocidade-crescimento">22.1</div>
+                            <div class="text-sm text-purple-700 font-medium">Pontos por Ano</div>
+                            <div class="text-xs text-gray-600 mt-1">Velocidade atual</div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl text-center">
+                            <div class="text-3xl font-bold text-green-600" id="posicao-carreira">5.4%</div>
+                            <div class="text-sm text-green-700 font-medium">Progresso Total</div>
+                            <div class="text-xs text-gray-600 mt-1">Até o nível máximo</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Distribuição de Pontos -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-xl font-semibold mb-6 text-gray-800">🥧 Distribuição de Pontos por Critério</h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Gráfico de Pizza SVG -->
+                        <div class="flex justify-center">
+                            <div class="relative">
+                                <svg width="300" height="300" viewBox="0 0 300 300" class="transform -rotate-90">
+                                    <!-- Círculo de fundo -->
+                                    <circle cx="150" cy="150" r="120" fill="none" stroke="#f3f4f6" stroke-width="20"/>
+                                    
+                                    <!-- Segmentos do gráfico -->
+                                    <circle id="segmento-tempo" cx="150" cy="150" r="120" fill="none" stroke="#3b82f6" stroke-width="20" 
+                                            stroke-dasharray="0 754" stroke-dashoffset="0" class="transition-all duration-1000"/>
+                                    <circle id="segmento-desempenho" cx="150" cy="150" r="120" fill="none" stroke="#10b981" stroke-width="20" 
+                                            stroke-dasharray="0 754" stroke-dashoffset="0" class="transition-all duration-1000"/>
+                                    <circle id="segmento-aperfeicoamento" cx="150" cy="150" r="120" fill="none" stroke="#8b5cf6" stroke-width="20" 
+                                            stroke-dasharray="0 754" stroke-dashoffset="0" class="transition-all duration-1000"/>
+                                    <circle id="segmento-responsabilidade" cx="150" cy="150" r="120" fill="none" stroke="#f59e0b" stroke-width="20" 
+                                            stroke-dasharray="0 754" stroke-dashoffset="0" class="transition-all duration-1000"/>
+                                    <circle id="segmento-titulacao" cx="150" cy="150" r="120" fill="none" stroke="#ef4444" stroke-width="20" 
+                                            stroke-dasharray="0 754" stroke-dashoffset="0" class="transition-all duration-1000"/>
+                                </svg>
+                                
+                                <!-- Centro do gráfico -->
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <div class="text-2xl font-bold text-gray-800" id="total-pontos-grafico">46.5</div>
+                                        <div class="text-sm text-gray-600">pontos</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Legenda e Detalhes -->
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer" onclick="destacarSegmento('tempo')">
+                                <div class="flex items-center">
+                                    <div class="w-4 h-4 bg-blue-500 rounded mr-3"></div>
+                                    <span class="font-medium">Tempo de Exercício</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-blue-600" id="pontos-tempo-pizza">4.8 pts</div>
+                                    <div class="text-sm text-gray-600" id="percent-tempo">10.3%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors cursor-pointer" onclick="destacarSegmento('desempenho')">
+                                <div class="flex items-center">
+                                    <div class="w-4 h-4 bg-green-500 rounded mr-3"></div>
+                                    <span class="font-medium">Avaliação de Desempenho</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-green-600" id="pontos-desempenho-pizza">11.3 pts</div>
+                                    <div class="text-sm text-gray-600" id="percent-desempenho">24.3%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors cursor-pointer" onclick="destacarSegmento('aperfeicoamento')">
+                                <div class="flex items-center">
+                                    <div class="w-4 h-4 bg-purple-500 rounded mr-3"></div>
+                                    <span class="font-medium">Aperfeiçoamento</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-purple-600" id="pontos-aperfeicoamento-pizza">7.2 pts</div>
+                                    <div class="text-sm text-gray-600" id="percent-aperfeicoamento">15.5%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors cursor-pointer" onclick="destacarSegmento('responsabilidade')">
+                                <div class="flex items-center">
+                                    <div class="w-4 h-4 bg-yellow-500 rounded mr-3"></div>
+                                    <span class="font-medium">Responsabilidade</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-yellow-600" id="pontos-responsabilidade-pizza">12.0 pts</div>
+                                    <div class="text-sm text-gray-600" id="percent-responsabilidade">25.8%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors cursor-pointer" onclick="destacarSegmento('titulacao')">
+                                <div class="flex items-center">
+                                    <div class="w-4 h-4 bg-red-500 rounded mr-3"></div>
+                                    <span class="font-medium">Titulação</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-red-600" id="pontos-titulacao-pizza">14.0 pts</div>
+                                    <div class="text-sm text-gray-600" id="percent-titulacao">30.1%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Evolução Temporal -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-xl font-semibold mb-6 text-gray-800">📈 Evolução da Pontuação ao Longo do Tempo</h3>
+                    
+                    <div class="mb-6">
+                        <div class="flex gap-4 mb-4">
+                            <button onclick="alterarPeriodoGrafico('6m')" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors periodo-btn active">
+                                6 meses
+                            </button>
+                            <button onclick="alterarPeriodoGrafico('1a')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors periodo-btn">
+                                1 ano
+                            </button>
+                            <button onclick="alterarPeriodoGrafico('2a')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors periodo-btn">
+                                2 anos
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Gráfico de Linha SVG -->
+                    <div class="relative">
+                        <svg width="100%" height="300" viewBox="0 0 800 300" class="border rounded-lg bg-gray-50">
+                            <!-- Grid de fundo -->
+                            <defs>
+                                <pattern id="grid" width="80" height="30" patternUnits="userSpaceOnUse">
+                                    <path d="M 80 0 L 0 0 0 30" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+                                </pattern>
+                            </defs>
+                            <rect width="100%" height="100%" fill="url(#grid)" />
+                            
+                            <!-- Eixos -->
+                            <line x1="60" y1="250" x2="750" y2="250" stroke="#374151" stroke-width="2"/>
+                            <line x1="60" y1="250" x2="60" y2="30" stroke="#374151" stroke-width="2"/>
+                            
+                            <!-- Labels do eixo Y -->
+                            <text x="45" y="255" text-anchor="end" class="text-xs fill-gray-600">0</text>
+                            <text x="45" y="205" text-anchor="end" class="text-xs fill-gray-600">20</text>
+                            <text x="45" y="155" text-anchor="end" class="text-xs fill-gray-600">40</text>
+                            <text x="45" y="105" text-anchor="end" class="text-xs fill-gray-600">60</text>
+                            <text x="45" y="55" text-anchor="end" class="text-xs fill-gray-600">80</text>
+                            
+                            <!-- Linha de evolução -->
+                            <polyline id="linha-evolucao" points="60,240 180,220 300,200 420,180 540,160 660,140 750,130" 
+                                     fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"
+                                     stroke-dasharray="1000" stroke-dashoffset="1000" class="animate-draw"/>
+                            
+                            <!-- Pontos de dados -->
+                            <g id="pontos-dados">
+                                <!-- Pontos serão adicionados dinamicamente -->
+                            </g>
+                            
+                            <!-- Labels do eixo X -->
+                            <g id="labels-tempo" class="text-xs fill-gray-600">
+                                <!-- Labels serão adicionados dinamicamente -->
+                            </g>
+                        </svg>
+                        
+                        <!-- Tooltip -->
+                        <div id="tooltip-grafico" class="absolute bg-gray-800 text-white px-3 py-2 rounded-lg text-sm opacity-0 pointer-events-none transition-opacity duration-200 z-10">
+                            <div id="tooltip-data"></div>
+                            <div id="tooltip-pontos"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Ciência -->
+    <div id="modal-ciencia" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-md mx-4">
+            <h3 class="text-xl font-bold mb-4 text-green-600">✅ Confirmação de Ciência</h3>
+            <p class="text-gray-700 mb-6">Você confirma que está ciente de todas as pontuações apresentadas no sistema?</p>
+            <div class="flex gap-4">
+                <button onclick="confirmarCienciaFinal()" class="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                    Sim, Confirmo
+                </button>
+                <button onclick="fecharModal('modal-ciencia')" class="flex-1 px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Recurso -->
+    <div id="modal-recurso" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-2xl mx-4">
+            <h3 class="text-xl font-bold mb-4 text-yellow-600">📝 Entrada de Recurso</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Critério Questionado</label>
+                    <select id="criterio-recurso" class="w-full p-3 border border-gray-300 rounded-lg input-focus">
+                        <option value="">Selecione o critério</option>
+                        <option value="tempo">Tempo de Exercício</option>
+                        <option value="desempenho">Avaliação de Desempenho</option>
+                        <option value="aperfeicoamento">Aperfeiçoamento</option>
+                        <option value="responsabilidade">Responsabilidade</option>
+                        <option value="titulacao">Titulação</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Justificativa do Recurso</label>
+                    <textarea id="justificativa-recurso" class="w-full p-3 border border-gray-300 rounded-lg input-focus h-32" placeholder="Descreva detalhadamente os motivos do seu recurso..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Documentos Anexos (opcional)</label>
+                    <input type="file" id="anexos-recurso" multiple class="w-full p-3 border border-gray-300 rounded-lg input-focus">
+                </div>
+            </div>
+            <div class="flex gap-4 mt-6">
+                <button onclick="enviarRecurso()" class="flex-1 px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+                    Enviar Recurso
+                </button>
+                <button onclick="fecharModal('modal-recurso')" class="flex-1 px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados do sistema
+        let faltas = [];
+        let cursos = [
+            { nome: "Gestão Pública Avançada", horas: 80 }
+        ];
+        let responsabilidades = [
+            { tipo: "Chefia de Setor", meses: 24 }
+        ];
+        let titulacoes = [
+            { tipo: "graduacao", nome: "Administração Pública - UFMG", data: "2018-12-15", pontos: 6 },
+            { tipo: "especializacao", nome: "Gestão Pública - FGV", data: "2020-06-20", pontos: 8 }
+        ];
+
+        let servidores = [
+            { nome: "João Silva", cpf: "123.456.789-00", cargo: "Analista Administrativo", unidade: "GERFIS" }
+        ];
+
+        let unidades = [
+            { codigo: "GERFIS", nome: "Gerência de Fiscalização", orgao: "SEF" }
+        ];
+
+        let niveisCarreiras = {
+            administrativa: [
+                { nivel: "A", pontos: 0 },
+                { nivel: "B", pontos: 48 },
+                { nivel: "C", pontos: 96 },
+                { nivel: "D", pontos: 144 }
+            ],
+            fiscal: [
+                { nivel: "A", pontos: 0 },
+                { nivel: "B", pontos: 60 },
+                { nivel: "C", pontos: 120 },
+                { nivel: "D", pontos: 180 }
+            ]
+        };
+
+        // Função para mostrar tabs
+        function showTab(tabName) {
+            // Esconder todos os conteúdos
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remover classe ativa de todos os botões
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('tab-active');
+                button.classList.add('hover:bg-gray-100');
+            });
+            
+            // Mostrar conteúdo selecionado
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            
+            // Ativar botão selecionado
+            const activeButton = document.getElementById(`tab-${tabName}`);
+            activeButton.classList.add('tab-active');
+            activeButton.classList.remove('hover:bg-gray-100');
+        }
+
+        // Funções do Administrador
+        function salvarServidor() {
+            const nome = document.getElementById('admin-nome').value;
+            const cpf = document.getElementById('admin-cpf').value;
+            const cargo = document.getElementById('admin-cargo').value;
+            const unidade = document.getElementById('admin-unidade-trabalho').value;
+            
+            if (nome && cpf && cargo && unidade) {
+                servidores.push({ nome, cpf, cargo, unidade });
+                atualizarTabelaServidores();
+                limparFormulario();
+                alert('Servidor cadastrado com sucesso!');
+            } else {
+                alert('Preencha todos os campos obrigatórios!');
+            }
+        }
+
+        function limparFormulario() {
+            document.querySelectorAll('#content-administrador input, #content-administrador select').forEach(field => {
+                field.value = '';
+            });
+        }
+
+        function adicionarUnidade() {
+            const codigo = document.getElementById('codigo-unidade').value;
+            const nome = document.getElementById('nome-unidade').value;
+            const orgao = document.getElementById('orgao-unidade').value;
+            
+            if (codigo && nome && orgao) {
+                unidades.push({ codigo, nome, orgao });
+                atualizarListaUnidades();
+                document.getElementById('codigo-unidade').value = '';
+                document.getElementById('nome-unidade').value = '';
+                document.getElementById('orgao-unidade').value = '';
+            }
+        }
+
+        function atualizarListaUnidades() {
+            const lista = document.getElementById('lista-unidades');
+            lista.innerHTML = '';
+            
+            unidades.forEach((unidade, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg';
+                div.innerHTML = `
+                    <div>
+                        <span class="font-medium">${unidade.codigo} - ${unidade.nome}</span>
+                        <span class="text-gray-600 ml-2">(${unidade.orgao})</span>
+                    </div>
+                    <button onclick="removerUnidade(${index})" class="text-red-600 hover:text-red-800">🗑️</button>
+                `;
+                lista.appendChild(div);
+            });
+        }
+
+        function removerUnidade(index) {
+            unidades.splice(index, 1);
+            atualizarListaUnidades();
+        }
+
+        function carregarNiveisCarreira() {
+            const carreira = document.getElementById('carreira-selecionada').value;
+            const lista = document.getElementById('lista-niveis-carreira');
+            lista.innerHTML = '';
+            
+            if (niveisCarreiras[carreira]) {
+                niveisCarreiras[carreira].forEach((nivel, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg';
+                    div.innerHTML = `
+                        <div>
+                            <span class="font-medium">Nível ${nivel.nivel}</span>
+                            <span class="text-gray-600 ml-2">(${nivel.pontos}+ pontos)</span>
+                        </div>
+                        <button onclick="removerNivel('${carreira}', ${index})" class="text-red-600 hover:text-red-800">🗑️</button>
+                    `;
+                    lista.appendChild(div);
+                });
+            }
+        }
+
+        function adicionarNivel() {
+            const carreira = document.getElementById('carreira-selecionada').value;
+            const nivel = document.getElementById('nivel-letra').value.toUpperCase();
+            const pontos = parseInt(document.getElementById('pontos-minimos').value);
+            
+            if (nivel && pontos >= 0) {
+                if (!niveisCarreiras[carreira]) {
+                    niveisCarreiras[carreira] = [];
+                }
+                
+                niveisCarreiras[carreira].push({ nivel, pontos });
+                niveisCarreiras[carreira].sort((a, b) => a.pontos - b.pontos);
+                
+                carregarNiveisCarreira();
+                document.getElementById('nivel-letra').value = '';
+                document.getElementById('pontos-minimos').value = '';
+            }
+        }
+
+        function removerNivel(carreira, index) {
+            niveisCarreiras[carreira].splice(index, 1);
+            carregarNiveisCarreira();
+        }
+
+        function salvarPesos() {
+            alert('Configurações de pesos salvas com sucesso!');
+        }
+
+        function atualizarTabelaServidores() {
+            const tabela = document.getElementById('tabela-servidores');
+            tabela.innerHTML = '';
+            
+            servidores.forEach((servidor, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b';
+                tr.innerHTML = `
+                    <td class="px-4 py-3">${servidor.nome}</td>
+                    <td class="px-4 py-3">${servidor.cpf}</td>
+                    <td class="px-4 py-3">${servidor.cargo}</td>
+                    <td class="px-4 py-3">${servidor.unidade}</td>
+                    <td class="px-4 py-3">
+                        <button class="text-blue-600 hover:text-blue-800 mr-2">✏️</button>
+                        <button onclick="removerServidor(${index})" class="text-red-600 hover:text-red-800">🗑️</button>
+                    </td>
+                `;
+                tabela.appendChild(tr);
+            });
+        }
+
+        function removerServidor(index) {
+            servidores.splice(index, 1);
+            atualizarTabelaServidores();
+        }
+
+        // Funções de Ciência e Recurso
+        function confirmarCiencia() {
+            document.getElementById('modal-ciencia').classList.remove('hidden');
+            document.getElementById('modal-ciencia').classList.add('flex');
+        }
+
+        function abrirRecurso() {
+            document.getElementById('modal-recurso').classList.remove('hidden');
+            document.getElementById('modal-recurso').classList.add('flex');
+        }
+
+        function fecharModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.getElementById(modalId).classList.remove('flex');
+        }
+
+        function confirmarCienciaFinal() {
+            alert('Ciência confirmada! Sua confirmação foi registrada no sistema.');
+            fecharModal('modal-ciencia');
+        }
+
+        function enviarRecurso() {
+            const criterio = document.getElementById('criterio-recurso').value;
+            const justificativa = document.getElementById('justificativa-recurso').value;
+            
+            if (criterio && justificativa) {
+                alert('Recurso enviado com sucesso! Você receberá uma resposta em até 15 dias úteis.');
+                fecharModal('modal-recurso');
+                document.getElementById('criterio-recurso').value = '';
+                document.getElementById('justificativa-recurso').value = '';
+            } else {
+                alert('Preencha todos os campos obrigatórios!');
+            }
+        }
+
+        // Função para calcular nível baseado na pontuação
+        function calcularNivel(pontos) {
+            // A=0, B=48, C=96, D=144... cada nível = 48 pontos
+            const nivel = Math.floor(pontos / 48);
+            const letras = 'ABCDEFGHIJKLMNOPQRS';
+            return letras[Math.min(nivel, letras.length - 1)];
+        }
+        
+        // Função para calcular pontos necessários para próximo nível
+        function calcularProximoNivel(pontos) {
+            const nivelAtual = Math.floor(pontos / 48);
+            const pontosProximoNivel = (nivelAtual + 1) * 48;
+            return pontosProximoNivel - pontos;
+        }
+        
+        // Função para calcular progresso no nível atual
+        function calcularProgressoNivel(pontos) {
+            const pontosNoNivel = pontos % 48;
+            return (pontosNoNivel / 48) * 100;
+        }
+
+        // Função para adicionar falta
+        function adicionarFalta() {
+            const data = document.getElementById('data-falta').value;
+            const tipo = document.getElementById('tipo-falta').value;
+            
+            if (data) {
+                faltas.push({ data, tipo });
+                atualizarListaFaltas();
+                calcularTempo();
+                document.getElementById('data-falta').value = '';
+            }
+        }
+
+        // Função para atualizar lista de faltas
+        function atualizarListaFaltas() {
+            const lista = document.getElementById('lista-faltas');
+            lista.innerHTML = '';
+            
+            faltas.forEach((falta, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-3 bg-red-50 rounded-lg';
+                div.innerHTML = `
+                    <div>
+                        <span class="font-medium">${new Date(falta.data).toLocaleDateString('pt-BR')}</span>
+                        <span class="text-gray-600 ml-2">(${falta.tipo})</span>
+                    </div>
+                    <button onclick="removerFalta(${index})" class="text-red-600 hover:text-red-800">
+                        ✕
+                    </button>
+                `;
+                lista.appendChild(div);
+            });
+        }
+
+        // Função para remover falta
+        function removerFalta(index) {
+            faltas.splice(index, 1);
+            atualizarListaFaltas();
+            calcularTempo();
+        }
+
+        // Função para calcular tempo
+        function calcularTempo() {
+            const dataInicio = new Date(document.getElementById('data-inicio').value);
+            const hoje = new Date();
+            const diasTotais = Math.floor((hoje - dataInicio) / (1000 * 60 * 60 * 24));
+            const totalFaltas = faltas.length;
+            const diasEfetivos = diasTotais - totalFaltas;
+            const pontosTempo = diasEfetivos * 0.0067;
+            
+            document.getElementById('dias-totais').textContent = diasTotais;
+            document.getElementById('total-faltas').textContent = totalFaltas;
+            document.getElementById('dias-efetivos').textContent = diasEfetivos;
+            document.getElementById('pontos-tempo-calc').textContent = pontosTempo.toFixed(2) + ' pts';
+            document.getElementById('pontos-tempo').textContent = pontosTempo.toFixed(1) + ' pts';
+            document.getElementById('dias-trabalhados').textContent = diasEfetivos;
+            
+            atualizarTotal();
+        }
+
+        // Função para alternar tipo de avaliação comportamental
+        function alterarTipoAvaliacao() {
+            const tipo = document.getElementById('tipo-avaliacao-comportamental').value;
+            const competenciasGeral = document.getElementById('competencias-geral');
+            const competenciasChefe = document.getElementById('competencias-chefe');
+            
+            if (tipo === 'chefe') {
+                competenciasGeral.classList.add('hidden');
+                competenciasChefe.classList.remove('hidden');
+            } else {
+                competenciasGeral.classList.remove('hidden');
+                competenciasChefe.classList.add('hidden');
+            }
+            
+            calcularDesempenho();
+        }
+
+        // Função para alternar tipo de avaliação técnica
+        function alterarTipoAvaliacaoTecnica() {
+            const tipo = document.getElementById('tipo-avaliacao-tecnica').value;
+            const competenciasTecnicasGeral = document.getElementById('competencias-tecnicas-geral');
+            const competenciasTecnicasChefe = document.getElementById('competencias-tecnicas-chefe');
+            
+            if (tipo === 'chefe') {
+                competenciasTecnicasGeral.classList.add('hidden');
+                competenciasTecnicasChefe.classList.remove('hidden');
+            } else {
+                competenciasTecnicasGeral.classList.remove('hidden');
+                competenciasTecnicasChefe.classList.add('hidden');
+            }
+            
+            calcularDesempenho();
+        }
+
+        // Função para calcular desempenho
+        function calcularDesempenho() {
+            // Resultados (70%)
+            const avaliacaoResultados = parseFloat(document.getElementById('avaliacao-resultados').value);
+            const pontosResultados = avaliacaoResultados * 1.596; // Fator para 70% de 11.4 (7.98/5)
+            
+            document.getElementById('nota-resultados').textContent = avaliacaoResultados;
+            document.getElementById('pontos-resultados-calc').textContent = pontosResultados.toFixed(2) + ' pts';
+            document.getElementById('pontos-resultados').textContent = pontosResultados.toFixed(1) + ' pts';
+            
+            // Competência Técnica (20%)
+            const tipoAvaliacaoTecnica = document.getElementById('tipo-avaliacao-tecnica').value;
+            let mediaTecnica = 0;
+            
+            if (tipoAvaliacaoTecnica === 'chefe') {
+                // Competências técnicas de chefia (3 indicadores)
+                const orcamentaria = parseFloat(document.getElementById('comp-orcamentaria').value);
+                const pessoas = parseFloat(document.getElementById('comp-pessoas').value);
+                const estrategico = parseFloat(document.getElementById('comp-estrategico').value);
+                
+                mediaTecnica = (orcamentaria + pessoas + estrategico) / 3;
+            } else {
+                // Competências técnicas gerais (3 indicadores)
+                const legislacao = parseFloat(document.getElementById('comp-legislacao').value);
+                const sistemas = parseFloat(document.getElementById('comp-sistemas').value);
+                const outros = parseFloat(document.getElementById('comp-outros').value);
+                
+                mediaTecnica = (legislacao + sistemas + outros) / 3;
+            }
+            const pontosTecnica = mediaTecnica * 0.684; // Fator para 20% de 11.4
+            
+            document.getElementById('media-tecnica').textContent = mediaTecnica.toFixed(2);
+            document.getElementById('pontos-tecnica-calc').textContent = pontosTecnica.toFixed(2) + ' pts';
+            document.getElementById('pontos-tecnica').textContent = pontosTecnica.toFixed(1) + ' pts';
+            
+            // Competência Comportamental (10%)
+            const tipoAvaliacao = document.getElementById('tipo-avaliacao-comportamental').value;
+            let mediaComportamental = 0;
+            
+            if (tipoAvaliacao === 'chefe') {
+                // Competências de chefia (6 indicadores)
+                const lideranca = parseFloat(document.getElementById('comp-lideranca').value);
+                const gestaoEquipe = parseFloat(document.getElementById('comp-gestao-equipe').value);
+                const decisao = parseFloat(document.getElementById('comp-decisao').value);
+                const planejamento = parseFloat(document.getElementById('comp-planejamento').value);
+                const comunicacaoGerencial = parseFloat(document.getElementById('comp-comunicacao-gerencial').value);
+                const conflitos = parseFloat(document.getElementById('comp-conflitos').value);
+                
+                mediaComportamental = (lideranca + gestaoEquipe + decisao + planejamento + comunicacaoGerencial + conflitos) / 6;
+            } else {
+                // Competências gerais (6 indicadores)
+                const relacionamento = parseFloat(document.getElementById('comp-relacionamento').value);
+                const iniciativa = parseFloat(document.getElementById('comp-iniciativa').value);
+                const comunicacao = parseFloat(document.getElementById('comp-comunicacao').value);
+                const equipe = parseFloat(document.getElementById('comp-equipe').value);
+                const adaptabilidade = parseFloat(document.getElementById('comp-adaptabilidade').value);
+                const etica = parseFloat(document.getElementById('comp-etica').value);
+                
+                mediaComportamental = (relacionamento + iniciativa + comunicacao + equipe + adaptabilidade + etica) / 6;
+            }
+            const pontosComportamental = mediaComportamental * 0.228; // Fator para 10% de 11.4
+            
+            document.getElementById('media-comportamental').textContent = mediaComportamental.toFixed(2);
+            document.getElementById('pontos-comportamental-calc').textContent = pontosComportamental.toFixed(2) + ' pts';
+            document.getElementById('pontos-comportamental').textContent = pontosComportamental.toFixed(1) + ' pts';
+            
+            // Total de desempenho
+            const totalDesempenho = pontosResultados + pontosTecnica + pontosComportamental;
+            document.getElementById('pontos-desempenho').textContent = totalDesempenho.toFixed(1) + ' pts';
+            
+            atualizarTotal();
+        }
+
+        // Função para atualizar período de avaliação
+        function atualizarPeriodoAvaliacao() {
+            const dataInicial = document.getElementById('data-inicial-avaliacao').value;
+            const dataFinal = document.getElementById('data-final-avaliacao').value;
+            
+            if (dataInicial && dataFinal) {
+                const inicio = new Date(dataInicial);
+                const fim = new Date(dataFinal);
+                const dias = Math.floor((fim - inicio) / (1000 * 60 * 60 * 24));
+                
+                const inicioFormatado = inicio.toLocaleDateString('pt-BR');
+                const fimFormatado = fim.toLocaleDateString('pt-BR');
+                
+                document.getElementById('periodo-avaliacao').textContent = 
+                    `${inicioFormatado} a ${fimFormatado} (${dias} dias)`;
+            }
+        }
+
+        // Função para adicionar curso
+        function adicionarCurso() {
+            const nome = document.getElementById('nome-curso').value;
+            const horas = parseInt(document.getElementById('carga-horaria').value);
+            
+            if (nome && horas >= 60 && horas <= 100) {
+                cursos.push({ nome, horas });
+                atualizarListaCursos();
+                document.getElementById('nome-curso').value = '';
+                document.getElementById('carga-horaria').value = '';
+            }
+        }
+
+        // Função para atualizar lista de cursos
+        function atualizarListaCursos() {
+            const lista = document.getElementById('lista-cursos');
+            lista.innerHTML = '';
+            
+            let totalPontos = 0;
+            cursos.forEach((curso, index) => {
+                const pontos = curso.horas * 0.09;
+                totalPontos += pontos;
+                
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-4 bg-gray-50 rounded-lg';
+                div.innerHTML = `
+                    <div>
+                        <span class="font-medium">${curso.nome}</span>
+                        <span class="text-gray-600 ml-2">(${curso.horas}h)</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-purple-600 font-semibold">${pontos.toFixed(1)} pts</span>
+                        <button onclick="removerCurso(${index})" class="text-red-600 hover:text-red-800">✕</button>
+                    </div>
+                `;
+                lista.appendChild(div);
+            });
+            
+            document.getElementById('total-pontos-cursos').textContent = totalPontos.toFixed(1) + ' pts';
+            document.getElementById('pontos-aperfeicoamento').textContent = totalPontos.toFixed(1) + ' pts';
+            document.getElementById('horas-cursos').textContent = cursos.reduce((total, curso) => total + curso.horas, 0);
+            
+            atualizarTotal();
+        }
+
+        // Função para remover curso
+        function removerCurso(index) {
+            cursos.splice(index, 1);
+            atualizarListaCursos();
+        }
+
+        // Função para adicionar responsabilidade
+        function adicionarResponsabilidade() {
+            const tipo = document.getElementById('tipo-responsabilidade').value;
+            const inicio = new Date(document.getElementById('inicio-responsabilidade').value);
+            const fim = new Date(document.getElementById('fim-responsabilidade').value);
+            
+            if (inicio && fim && fim > inicio) {
+                const meses = Math.floor((fim - inicio) / (1000 * 60 * 60 * 24 * 30));
+                responsabilidades.push({ tipo, meses });
+                atualizarListaResponsabilidades();
+                document.getElementById('inicio-responsabilidade').value = '';
+                document.getElementById('fim-responsabilidade').value = '';
+            }
+        }
+
+        // Função para atualizar lista de responsabilidades
+        function atualizarListaResponsabilidades() {
+            const lista = document.getElementById('lista-responsabilidades-detalhada');
+            lista.innerHTML = '';
+            
+            let totalPontos = 0;
+            responsabilidades.forEach((resp, index) => {
+                const pontos = resp.meses * 0.5;
+                totalPontos += pontos;
+                
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-4 bg-gray-50 rounded-lg';
+                div.innerHTML = `
+                    <div>
+                        <span class="font-medium">${resp.tipo}</span>
+                        <span class="text-gray-600 ml-2">(${resp.meses} meses)</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-orange-600 font-semibold">${pontos.toFixed(1)} pts</span>
+                        <button onclick="removerResponsabilidade(${index})" class="text-red-600 hover:text-red-800">✕</button>
+                    </div>
+                `;
+                lista.appendChild(div);
+            });
+            
+            document.getElementById('pontos-responsabilidade').textContent = totalPontos.toFixed(1) + ' pts';
+            
+            atualizarTotal();
+        }
+
+        // Função para remover responsabilidade
+        function removerResponsabilidade(index) {
+            responsabilidades.splice(index, 1);
+            atualizarListaResponsabilidades();
+        }
+
+        // Função para adicionar titulação
+        function adicionarTitulacao() {
+            const tipo = document.getElementById('tipo-titulacao').value;
+            const nome = document.getElementById('nome-titulacao').value;
+            const data = document.getElementById('data-titulacao').value;
+            
+            if (nome && data) {
+                let pontos = 0;
+                switch(tipo) {
+                    case 'graduacao': pontos = 6; break;
+                    case 'especializacao': pontos = 8; break;
+                    case 'mestrado': pontos = 24; break;
+                    case 'doutorado': pontos = 48; break;
+                }
+                
+                titulacoes.push({ tipo, nome, data, pontos });
+                atualizarListaTitulacoes();
+                document.getElementById('nome-titulacao').value = '';
+                document.getElementById('data-titulacao').value = '';
+            }
+        }
+
+        // Função para atualizar lista de titulações
+        function atualizarListaTitulacoes() {
+            const lista = document.getElementById('lista-titulacoes-detalhada');
+            lista.innerHTML = '';
+            
+            let totalPontos = 0;
+            titulacoes.forEach((titulacao, index) => {
+                totalPontos += titulacao.pontos;
+                
+                const tipoNome = {
+                    'graduacao': 'Graduação',
+                    'especializacao': 'Especialização', 
+                    'mestrado': 'Mestrado',
+                    'doutorado': 'Doutorado'
+                };
+                
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-4 bg-gray-50 rounded-lg';
+                div.innerHTML = `
+                    <div>
+                        <span class="font-medium">${titulacao.nome}</span>
+                        <span class="text-gray-600 ml-2">(${tipoNome[titulacao.tipo]} - ${new Date(titulacao.data).toLocaleDateString('pt-BR')})</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-pink-600 font-semibold">${titulacao.pontos} pts</span>
+                        <button onclick="removerTitulacao(${index})" class="text-red-600 hover:text-red-800">✕</button>
+                    </div>
+                `;
+                lista.appendChild(div);
+            });
+            
+            document.getElementById('total-pontos-titulacao').textContent = totalPontos + ' pts';
+            document.getElementById('pontos-titulacao').textContent = totalPontos.toFixed(1) + ' pts';
+            
+            atualizarTotal();
+        }
+
+        // Função para remover titulação
+        function removerTitulacao(index) {
+            titulacoes.splice(index, 1);
+            atualizarListaTitulacoes();
+        }
+
+        // Função para atualizar total geral
+        function atualizarTotal() {
+            const pontosTempo = parseFloat(document.getElementById('pontos-tempo').textContent) || 0;
+            const pontosDesempenho = parseFloat(document.getElementById('pontos-desempenho').textContent) || 0;
+            const pontosAperfeicoamento = parseFloat(document.getElementById('pontos-aperfeicoamento').textContent) || 0;
+            const pontosResponsabilidade = parseFloat(document.getElementById('pontos-responsabilidade').textContent) || 0;
+            const pontosTitulacao = parseFloat(document.getElementById('pontos-titulacao').textContent) || 0;
+            
+            const total = pontosTempo + pontosDesempenho + pontosAperfeicoamento + pontosResponsabilidade + pontosTitulacao;
+            
+            document.getElementById('pontuacao-total').textContent = total.toFixed(1) + ' pontos';
+            document.getElementById('pontos-atuais').textContent = Math.floor(total);
+            
+            const nivel = calcularNivel(total);
+            document.getElementById('nivel-atual').textContent = nivel;
+            
+            const pontosFaltam = calcularProximoNivel(total);
+            const progresso = calcularProgressoNivel(total);
+            
+            document.getElementById('pontos-faltam').textContent = Math.ceil(pontosFaltam) + ' pontos';
+            document.getElementById('progresso-percent').textContent = Math.floor(progresso) + '%';
+            document.getElementById('barra-progresso').style.width = progresso + '%';
+            
+            // Atualizar gráficos também
+            atualizarGraficos();
+        }
+
+        // Funções dos Gráficos
+        function atualizarGraficos() {
+            const pontosTempo = parseFloat(document.getElementById('pontos-tempo').textContent) || 4.8;
+            const pontosDesempenho = parseFloat(document.getElementById('pontos-desempenho').textContent) || 11.3;
+            const pontosAperfeicoamento = parseFloat(document.getElementById('pontos-aperfeicoamento').textContent) || 7.2;
+            const pontosResponsabilidade = parseFloat(document.getElementById('pontos-responsabilidade').textContent) || 12.0;
+            const pontosTitulacao = parseFloat(document.getElementById('pontos-titulacao').textContent) || 14.0;
+            
+            const total = pontosTempo + pontosDesempenho + pontosAperfeicoamento + pontosResponsabilidade + pontosTitulacao;
+            
+            // Atualizar gráfico de progressão na carreira
+            atualizarProgressaoCarreira(total);
+            
+            // Atualizar gráfico de pizza
+            atualizarGraficoPizza(pontosTempo, pontosDesempenho, pontosAperfeicoamento, pontosResponsabilidade, pontosTitulacao, total);
+            
+            // Atualizar gráfico de evolução temporal
+            atualizarGraficoEvolucao();
+            
+            // Gerar marcadores de níveis
+            gerarMarcadoresNiveis();
+        }
+
+        function atualizarProgressaoCarreira(total) {
+            const nivel = calcularNivel(total);
+            const pontosFaltam = calcularProximoNivel(total);
+            const progresso = calcularProgressoNivel(total);
+            const progressoCarreira = (total / 864) * 100; // 864 = pontos para nível S
+            
+            // Atualizar elementos
+            document.getElementById('nivel-grafico').textContent = `Nível ${nivel}`;
+            document.getElementById('pontos-grafico').textContent = `${total.toFixed(1)} pontos`;
+            document.getElementById('nivel-atual-detalhes').textContent = nivel;
+            
+            const letras = 'ABCDEFGHIJKLMNOPQRS';
+            const proximoNivelIndex = letras.indexOf(nivel) + 1;
+            const proximoNivel = proximoNivelIndex < letras.length ? letras[proximoNivelIndex] : 'S';
+            document.getElementById('proximo-nivel').textContent = proximoNivel;
+            document.getElementById('pontos-necessarios').textContent = `${pontosFaltam.toFixed(1)} pts`;
+            document.getElementById('progresso-nivel').textContent = `${progresso.toFixed(1)}%`;
+            
+            // Atualizar barra de progresso
+            document.getElementById('barra-carreira').style.width = `${Math.min(progressoCarreira, 100)}%`;
+            document.getElementById('indicador-posicao').style.left = `${Math.min(progressoCarreira, 100)}%`;
+            
+            // Projeções de crescimento
+            const crescimentoMensal = 2.3;
+            const projecao1ano = total + (crescimentoMensal * 12);
+            const projecao3anos = total + (crescimentoMensal * 36);
+            const projecao5anos = total + (crescimentoMensal * 60);
+            
+            document.getElementById('projecao-1ano').textContent = `Nível ${calcularNivel(projecao1ano)}`;
+            document.getElementById('projecao-3anos').textContent = `Nível ${calcularNivel(projecao3anos)}`;
+            document.getElementById('projecao-5anos').textContent = `Nível ${calcularNivel(projecao5anos)}`;
+            
+            // Atualizar estatísticas da carreira
+            atualizarEstatisticasCarreira(total, progressoCarreira);
+            
+            // Gerar dicas para evolução
+            gerarDicasEvolucao(total, pontosFaltam, proximoNivel);
+        }
+
+        function atualizarEstatisticasCarreira(total, progressoCarreira) {
+            // Calcular tempo na carreira (baseado na data de início)
+            const dataInicio = new Date(document.getElementById('data-inicio').value || '2022-01-15');
+            const hoje = new Date();
+            const tempoCarreira = (hoje - dataInicio) / (1000 * 60 * 60 * 24 * 365.25); // Anos
+            
+            // Calcular velocidade de crescimento
+            const velocidadeCrescimento = tempoCarreira > 0 ? total / tempoCarreira : 0;
+            
+            // Atualizar elementos
+            document.getElementById('tempo-carreira').textContent = tempoCarreira.toFixed(1);
+            document.getElementById('velocidade-crescimento').textContent = velocidadeCrescimento.toFixed(1);
+            document.getElementById('posicao-carreira').textContent = `${progressoCarreira.toFixed(1)}%`;
+        }
+
+        function gerarDicasEvolucao(total, pontosFaltam, proximoNivel) {
+            const container = document.getElementById('dicas-evolucao');
+            container.innerHTML = '';
+            
+            const pontosTempo = parseFloat(document.getElementById('pontos-tempo').textContent) || 4.8;
+            const pontosDesempenho = parseFloat(document.getElementById('pontos-desempenho').textContent) || 11.3;
+            const pontosAperfeicoamento = parseFloat(document.getElementById('pontos-aperfeicoamento').textContent) || 7.2;
+            const pontosResponsabilidade = parseFloat(document.getElementById('pontos-responsabilidade').textContent) || 12.0;
+            const pontosTitulacao = parseFloat(document.getElementById('pontos-titulacao').textContent) || 14.0;
+            
+            const dicas = [];
+            
+            // Análise de cada critério e sugestões
+            if (pontosFaltam <= 5) {
+                dicas.push({
+                    icon: '🎯',
+                    titulo: 'Você está muito próximo!',
+                    descricao: `Faltam apenas ${pontosFaltam.toFixed(1)} pontos para o Nível ${proximoNivel}. Continue mantendo seu bom desempenho.`,
+                    cor: 'green'
+                });
+            }
+            
+            // Dicas baseadas nos pontos mais baixos
+            const criterios = [
+                { nome: 'Tempo de Exercício', pontos: pontosTempo, max: 10, tipo: 'tempo' },
+                { nome: 'Avaliação de Desempenho', pontos: pontosDesempenho, max: 15, tipo: 'desempenho' },
+                { nome: 'Aperfeiçoamento', pontos: pontosAperfeicoamento, max: 12, tipo: 'aperfeicoamento' },
+                { nome: 'Responsabilidade', pontos: pontosResponsabilidade, max: 25, tipo: 'responsabilidade' },
+                { nome: 'Titulação', pontos: pontosTitulacao, max: 50, tipo: 'titulacao' }
+            ];
+            
+            // Ordenar por potencial de melhoria (menor percentual do máximo)
+            criterios.sort((a, b) => (a.pontos / a.max) - (b.pontos / b.max));
+            
+            // Gerar dicas para os 3 critérios com menor aproveitamento
+            criterios.slice(0, 3).forEach(criterio => {
+                const percentual = (criterio.pontos / criterio.max) * 100;
+                let dica = {};
+                
+                switch(criterio.tipo) {
+                    case 'tempo':
+                        dica = {
+                            icon: '⏰',
+                            titulo: 'Tempo de Exercício',
+                            descricao: 'Continue trabalhando consistentemente. Cada dia efetivo adiciona 0.0067 pontos. Evite faltas desnecessárias.',
+                            cor: 'blue'
+                        };
+                        break;
+                        
+                    case 'desempenho':
+                        if (percentual < 60) {
+                            dica = {
+                                icon: '📈',
+                                titulo: 'Melhore sua Avaliação de Desempenho',
+                                descricao: 'Foque em melhorar seus resultados, competências técnicas e comportamentais. Converse com sua chefia sobre metas claras.',
+                                cor: 'red'
+                            };
+                        } else {
+                            dica = {
+                                icon: '✨',
+                                titulo: 'Excelente Desempenho!',
+                                descricao: 'Mantenha o alto padrão de qualidade em suas entregas e continue desenvolvendo suas competências.',
+                                cor: 'green'
+                            };
+                        }
+                        break;
+                        
+                    case 'aperfeicoamento':
+                        if (criterio.pontos < 8) {
+                            dica = {
+                                icon: '🎓',
+                                titulo: 'Invista em Capacitação',
+                                descricao: `Você tem ${criterio.pontos.toFixed(1)} pontos. Faça cursos de 60-100h para ganhar até 9 pontos. Cada hora vale 0.09 pontos.`,
+                                cor: 'purple'
+                            };
+                        } else {
+                            dica = {
+                                icon: '📚',
+                                titulo: 'Continue se Capacitando',
+                                descricao: 'Ótimo aproveitamento em cursos! Continue buscando novas capacitações para manter-se atualizado.',
+                                cor: 'green'
+                            };
+                        }
+                        break;
+                        
+                    case 'responsabilidade':
+                        if (criterio.pontos < 10) {
+                            dica = {
+                                icon: '👔',
+                                titulo: 'Busque Posições de Responsabilidade',
+                                descricao: 'Considere assumir funções de chefia, coordenação ou assessoria. Cada mês em posição de responsabilidade vale 0.5 pontos.',
+                                cor: 'orange'
+                            };
+                        } else {
+                            dica = {
+                                icon: '🏆',
+                                titulo: 'Excelente Liderança!',
+                                descricao: 'Você tem demonstrado grande capacidade de liderança. Continue assumindo responsabilidades importantes.',
+                                cor: 'green'
+                            };
+                        }
+                        break;
+                        
+                    case 'titulacao':
+                        if (criterio.pontos < 15) {
+                            dica = {
+                                icon: '🎯',
+                                titulo: 'Invista em Titulação Acadêmica',
+                                descricao: 'Considere fazer uma especialização (8 pts), mestrado (24 pts) ou doutorado (48 pts) para acelerar sua progressão.',
+                                cor: 'pink'
+                            };
+                        } else {
+                            dica = {
+                                icon: '🌟',
+                                titulo: 'Excelente Formação Acadêmica!',
+                                descricao: 'Sua titulação está contribuindo significativamente para sua progressão. Continue se especializando.',
+                                cor: 'green'
+                            };
+                        }
+                        break;
+                }
+                
+                dicas.push(dica);
+            });
+            
+            // Dica especial baseada no tempo para próximo nível
+            if (pontosFaltam > 0) {
+                const tempoEstimado = pontosFaltam / 2.3; // Baseado no crescimento mensal médio
+                if (tempoEstimado < 12) {
+                    dicas.push({
+                        icon: '🚀',
+                        titulo: 'Meta Alcançável!',
+                        descricao: `Com seu ritmo atual, você pode alcançar o Nível ${proximoNivel} em aproximadamente ${Math.ceil(tempoEstimado)} meses.`,
+                        cor: 'indigo'
+                    });
+                } else {
+                    dicas.push({
+                        icon: '💪',
+                        titulo: 'Acelere seu Crescimento',
+                        descricao: 'Para alcançar o próximo nível mais rapidamente, foque nos critérios aceleradores: Responsabilidade e Titulação.',
+                        cor: 'yellow'
+                    });
+                }
+            }
+            
+            // Renderizar dicas
+            dicas.forEach(dica => {
+                const div = document.createElement('div');
+                div.className = `flex items-start gap-4 p-4 bg-${dica.cor}-50 border-l-4 border-${dica.cor}-400 rounded-r-lg`;
+                div.innerHTML = `
+                    <div class="text-2xl">${dica.icon}</div>
+                    <div class="flex-1">
+                        <h6 class="font-semibold text-${dica.cor}-800 mb-1">${dica.titulo}</h6>
+                        <p class="text-${dica.cor}-700 text-sm">${dica.descricao}</p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function atualizarGraficoPizza(tempo, desempenho, aperfeicoamento, responsabilidade, titulacao, total) {
+            const circumferencia = 2 * Math.PI * 120; // 754
+            
+            // Calcular percentuais
+            const percentTempo = (tempo / total) * 100;
+            const percentDesempenho = (desempenho / total) * 100;
+            const percentAperfeicoamento = (aperfeicoamento / total) * 100;
+            const percentResponsabilidade = (responsabilidade / total) * 100;
+            const percentTitulacao = (titulacao / total) * 100;
+            
+            // Calcular comprimentos dos arcos
+            const arcoTempo = (percentTempo / 100) * circumferencia;
+            const arcoDesempenho = (percentDesempenho / 100) * circumferencia;
+            const arcoAperfeicoamento = (percentAperfeicoamento / 100) * circumferencia;
+            const arcoResponsabilidade = (percentResponsabilidade / 100) * circumferencia;
+            const arcoTitulacao = (percentTitulacao / 100) * circumferencia;
+            
+            // Atualizar segmentos
+            let offset = 0;
+            
+            // Tempo
+            document.getElementById('segmento-tempo').style.strokeDasharray = `${arcoTempo} ${circumferencia}`;
+            document.getElementById('segmento-tempo').style.strokeDashoffset = -offset;
+            offset += arcoTempo;
+            
+            // Desempenho
+            document.getElementById('segmento-desempenho').style.strokeDasharray = `${arcoDesempenho} ${circumferencia}`;
+            document.getElementById('segmento-desempenho').style.strokeDashoffset = -offset;
+            offset += arcoDesempenho;
+            
+            // Aperfeiçoamento
+            document.getElementById('segmento-aperfeicoamento').style.strokeDasharray = `${arcoAperfeicoamento} ${circumferencia}`;
+            document.getElementById('segmento-aperfeicoamento').style.strokeDashoffset = -offset;
+            offset += arcoAperfeicoamento;
+            
+            // Responsabilidade
+            document.getElementById('segmento-responsabilidade').style.strokeDasharray = `${arcoResponsabilidade} ${circumferencia}`;
+            document.getElementById('segmento-responsabilidade').style.strokeDashoffset = -offset;
+            offset += arcoResponsabilidade;
+            
+            // Titulação
+            document.getElementById('segmento-titulacao').style.strokeDasharray = `${arcoTitulacao} ${circumferencia}`;
+            document.getElementById('segmento-titulacao').style.strokeDashoffset = -offset;
+            
+            // Atualizar valores na legenda
+            document.getElementById('total-pontos-grafico').textContent = total.toFixed(1);
+            document.getElementById('pontos-tempo-pizza').textContent = `${tempo.toFixed(1)} pts`;
+            document.getElementById('percent-tempo').textContent = `${percentTempo.toFixed(1)}%`;
+            document.getElementById('pontos-desempenho-pizza').textContent = `${desempenho.toFixed(1)} pts`;
+            document.getElementById('percent-desempenho').textContent = `${percentDesempenho.toFixed(1)}%`;
+            document.getElementById('pontos-aperfeicoamento-pizza').textContent = `${aperfeicoamento.toFixed(1)} pts`;
+            document.getElementById('percent-aperfeicoamento').textContent = `${percentAperfeicoamento.toFixed(1)}%`;
+            document.getElementById('pontos-responsabilidade-pizza').textContent = `${responsabilidade.toFixed(1)} pts`;
+            document.getElementById('percent-responsabilidade').textContent = `${percentResponsabilidade.toFixed(1)}%`;
+            document.getElementById('pontos-titulacao-pizza').textContent = `${titulacao.toFixed(1)} pts`;
+            document.getElementById('percent-titulacao').textContent = `${percentTitulacao.toFixed(1)}%`;
+        }
+
+        function destacarSegmento(tipo) {
+            // Reset todos os segmentos
+            document.querySelectorAll('[id^="segmento-"]').forEach(seg => {
+                seg.style.strokeWidth = '20';
+                seg.style.filter = 'none';
+            });
+            
+            // Destacar o segmento selecionado
+            const segmento = document.getElementById(`segmento-${tipo}`);
+            segmento.style.strokeWidth = '25';
+            segmento.style.filter = 'drop-shadow(0 0 10px rgba(0,0,0,0.3))';
+            
+            // Resetar após 2 segundos
+            setTimeout(() => {
+                segmento.style.strokeWidth = '20';
+                segmento.style.filter = 'none';
+            }, 2000);
+        }
+
+        function gerarMarcadoresNiveis() {
+            const container = document.getElementById('marcadores-niveis');
+            container.innerHTML = '';
+            
+            const letras = 'ABCDEFGHIJKLMNOPQRS';
+            const pontosPorNivel = 48;
+            
+            for (let i = 0; i < letras.length; i += 3) { // Mostrar a cada 3 níveis
+                const nivel = letras[i];
+                const pontos = i * pontosPorNivel;
+                const posicao = (pontos / 864) * 100; // 864 = pontos para nível S
+                
+                const marcador = document.createElement('div');
+                marcador.className = 'text-xs text-gray-500 text-center';
+                marcador.style.position = 'absolute';
+                marcador.style.left = `${posicao}%`;
+                marcador.style.transform = 'translateX(-50%)';
+                marcador.innerHTML = `${nivel}<br>${pontos}`;
+                
+                container.appendChild(marcador);
+            }
+        }
+
+        function atualizarGraficoEvolucao() {
+            // Dados simulados de evolução
+            const dadosEvolucao = [
+                { mes: 'Jan', pontos: 25.2 },
+                { mes: 'Fev', pontos: 28.1 },
+                { mes: 'Mar', pontos: 31.5 },
+                { mes: 'Abr', pontos: 34.8 },
+                { mes: 'Mai', pontos: 38.2 },
+                { mes: 'Jun', pontos: 42.1 },
+                { mes: 'Jul', pontos: 46.5 }
+            ];
+            
+            // Limpar pontos existentes
+            document.getElementById('pontos-dados').innerHTML = '';
+            document.getElementById('labels-tempo').innerHTML = '';
+            
+            // Adicionar pontos e labels
+            dadosEvolucao.forEach((dado, index) => {
+                const x = 60 + (index * 115);
+                const y = 250 - (dado.pontos * 2.5); // Escala
+                
+                // Ponto no gráfico
+                const ponto = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                ponto.setAttribute('cx', x);
+                ponto.setAttribute('cy', y);
+                ponto.setAttribute('r', '4');
+                ponto.setAttribute('fill', '#3b82f6');
+                ponto.setAttribute('stroke', 'white');
+                ponto.setAttribute('stroke-width', '2');
+                ponto.style.cursor = 'pointer';
+                
+                // Tooltip no hover
+                ponto.addEventListener('mouseenter', (e) => {
+                    const tooltip = document.getElementById('tooltip-grafico');
+                    document.getElementById('tooltip-data').textContent = dado.mes;
+                    document.getElementById('tooltip-pontos').textContent = `${dado.pontos} pontos`;
+                    tooltip.style.opacity = '1';
+                    tooltip.style.left = `${x}px`;
+                    tooltip.style.top = `${y - 40}px`;
+                });
+                
+                ponto.addEventListener('mouseleave', () => {
+                    document.getElementById('tooltip-grafico').style.opacity = '0';
+                });
+                
+                document.getElementById('pontos-dados').appendChild(ponto);
+                
+                // Label do mês
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', x);
+                label.setAttribute('y', 270);
+                label.setAttribute('text-anchor', 'middle');
+                label.textContent = dado.mes;
+                label.classList.add('text-xs', 'fill-gray-600');
+                
+                document.getElementById('labels-tempo').appendChild(label);
+            });
+            
+            // Atualizar linha de evolução
+            const pontos = dadosEvolucao.map((dado, index) => {
+                const x = 60 + (index * 115);
+                const y = 250 - (dado.pontos * 2.5);
+                return `${x},${y}`;
+            }).join(' ');
+            
+            document.getElementById('linha-evolucao').setAttribute('points', pontos);
+        }
+
+        function alterarPeriodoGrafico(periodo) {
+            // Remover classe active de todos os botões
+            document.querySelectorAll('.periodo-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+                btn.classList.remove('bg-blue-100', 'text-blue-700');
+            });
+            
+            // Ativar botão selecionado
+            event.target.classList.add('active');
+            event.target.classList.remove('bg-gray-100', 'text-gray-700');
+            
+            // Atualizar gráfico baseado no período
+            atualizarGraficoEvolucao();
+        }
+
+        // Inicializar cálculos
+        document.addEventListener('DOMContentLoaded', function() {
+            calcularTempo();
+            calcularDesempenho();
+            atualizarListaCursos();
+            atualizarListaResponsabilidades();
+            atualizarListaTitulacoes();
+            atualizarTabelaServidores();
+            atualizarListaUnidades();
+            carregarNiveisCarreira();
+            atualizarPeriodoAvaliacao();
+            atualizarGraficos();
+            
+            // Adicionar listeners para atualizar período de avaliação
+            document.getElementById('data-inicial-avaliacao').addEventListener('change', atualizarPeriodoAvaliacao);
+            document.getElementById('data-final-avaliacao').addEventListener('change', atualizarPeriodoAvaliacao);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97e16d1871302ebe',t:'MTc1NzcwMTMwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
