@@ -27,14 +27,28 @@
                     </tr>
                     <tr>
                         <th>
-                        <label for="dados" class="form-label" style="font-weight: normal;" > </label>
-                        <input type="number" id="nivel" class="form-control w-50 ">
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <input type="text" id="nivel" class="form-control w-50" style="font-weight: normal;">
+                            </div>
+                        </th>
+                        <th>
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <label for="aperfeiçoamento" class="form-label mb-0" style="font-weight: normal; " >Data: </label>
+                                <input type="date" id="dataInicio" class="form-control w-50  ">
+                            </div>
+                            
+                        </th>
+                        <th>
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <input type="number" id="pontuRema" class="form-control w-50" style="font-weight: normal;">
+                            </div>
                         </th>
                     </tr>
                 </tbody>
 
             </table>
         </div >
+         <button onclick="enviar()">Enviar</button><br><br>
         
         <h3 class="estilo2" >Critérios Obrigatórios</h3><br>
 
@@ -54,12 +68,16 @@
                     </tr>
                     <tr>
                         <th>
-                        <label for="aperfeiçoamento" class="form-label" style="font-weight: normal;" >Data: </label>
-                        <input type="date" id="data1" class="form-control w-50 ">
+                            <div class="d-flex align-items-center justify-content-center gap-2" style="font-weight: normal;">
+                                <label for="data1" class="form-label mb-0" style="font-weight: normal;">Data: </label>
+                                <input type="date" id="dataAfast" class="form-control w-50 ">
+                            </div>
                         </th>
                         <th>
-                            <label for="aperfeiçoamento" class="form-label" style="font-weight: normal;">Quantidade: </label>
-                            <input type="number" id="cargah1" class="form-control w-50 ">
+                            <div class="d-flex align-items-center justify-content-center gap-2" style="font-weight: normal;">
+                                <label for="data1" class="form-label mb-0" style="font-weight: normal;">Quantidade: </label>
+                                 <input type="number" id="qtde" class="form-control w-50">
+                            </div>
                         </th>
                     </tr>
                     <tr class="estilo1">
@@ -75,12 +93,16 @@
                     </tr>
                     <tr>
                         <th>
-                        <label for="aperfeiçoamento" class="form-label" style="font-weight: normal;" >Data da conclusão: </label>
-                        <input type="date" id="data1" class="form-control w-50 ">
+                            <div class="d-flex align-items-center justify-content-center gap-2" style="font-weight: normal;">
+                                 <label for="data1" class="form-label mb-0" style="font-weight: normal;">Data: </label>
+                                 <input type="date" id="dataAperf" class="form-control w-50 ">
+                            </div>
                         </th>
                         <th>
-                            <label for="aperfeiçoamento" class="form-label" style="font-weight: normal;">Carga Horária: </label>
-                            <input type="number" id="cargah1" class="form-control w-50 ">
+                            <div class="d-flex align-items-center justify-content-center gap-2" style="font-weight: normal;">
+                                 <label for="data1" class="form-label mb-0" style="font-weight: normal;">Quantidade: </label>
+                                 <input type="number" id="carga" class="form-control w-50 ">
+                            </div>
                         </th>
                     </tr>
                 
