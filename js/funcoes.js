@@ -172,7 +172,6 @@ function gerarCarreira() {
         linhasTabelaHTML += `
             <tr>
                 <td>${dataFormatada}</td>
-<<<<<<< HEAD
                 <td>${afastamento}</td>
                 <td>${efetivo.toFixed(4)}</td>
                 <td>${desempenhoValor.toFixed(4)}</td>
@@ -185,20 +184,6 @@ function gerarCarreira() {
                 <td>${somaAcumulada.toFixed(4)}</td>
             </tr>
 `;
-=======
-                <td></td>
-                <td>${efetivo.toFixed(1)}</td>
-                <td>${desempenho.toFixed(1)}</td>
-                <td>${aperfeicoamento.toFixed(1)}</td>
-                <td>${soma345.toFixed(1)}</td>
-                <td>${titulacao.toFixed(1)}</td>
-                <td>${assuncaoMensal.toFixed(1)}</td>
-                <td>${assuncaoUnica.toFixed(1)}</td>
-                <td>${soma6789.toFixed(1)}</td>
-                <td>${somaAcumulada.toFixed(1)}</td>
-            </tr>
-        `;
->>>>>>> d98df5f15caf45e7df8e94cf9cb89fc68197d729
 
 
 
