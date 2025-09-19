@@ -172,6 +172,7 @@ function gerarCarreira() {
         linhasTabelaHTML += `
             <tr>
                 <td>${dataFormatada}</td>
+<<<<<<< HEAD
                 <td>${afastamento}</td>
                 <td>${efetivo.toFixed(4)}</td>
                 <td>${desempenhoValor.toFixed(4)}</td>
@@ -184,6 +185,20 @@ function gerarCarreira() {
                 <td>${somaAcumulada.toFixed(4)}</td>
             </tr>
 `;
+=======
+                <td></td>
+                <td>${efetivo.toFixed(1)}</td>
+                <td>${desempenho.toFixed(1)}</td>
+                <td>${aperfeicoamento.toFixed(1)}</td>
+                <td>${soma345.toFixed(1)}</td>
+                <td>${titulacao.toFixed(1)}</td>
+                <td>${assuncaoMensal.toFixed(1)}</td>
+                <td>${assuncaoUnica.toFixed(1)}</td>
+                <td>${soma6789.toFixed(1)}</td>
+                <td>${somaAcumulada.toFixed(1)}</td>
+            </tr>
+        `;
+>>>>>>> d98df5f15caf45e7df8e94cf9cb89fc68197d729
 
 
 
@@ -194,29 +209,29 @@ function gerarCarreira() {
     }
 
     const tabelaCompleta = `
-    <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; margin-top: 20px;">
-        <table class="table table-bordered text-center" style="width: 100%;">
-            <thead style="background-color: #003b19; color: #edebe7;">
-                <tr>
-                    <th>Data</th>
-                    <th>Afastamentos</th>
-                    <th>Efetivo Exercício</th>
-                    <th>Desempenho</th>
-                    <th>Aperfeiçoamento</th>
-                    <th>Soma Critérios Obrigatórios</th>
-                    <th>Titulação Acadêmica</th>
-                    <th>Assunção de Responsabilidade - Mensal</th>
-                    <th>Assunção de Responsabilidade - Única</th>
-                    <th>Soma Total</th>
-                    <th>Soma Acumulada</th>
-                </tr>    
-            </thead>
-            <tbody> 
-                ${linhasTabelaHTML}
-            </tbody>
-        </table>
-    </div>
-`;
+        <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; margin-top: 20px;">
+            <table class="table table-bordered text-center" style="width: 100%;">
+                <thead class="cabecalho-verde">
+                    <tr>
+                        <th>Data</th>
+                        <th>Afastamentos</th>
+                        <th>Efetivo Exercício</th>
+                        <th>Desempenho</th>
+                        <th>Aperfeiçoamento</th>
+                        <th>Soma Critérios Obrigatórios</th>
+                        <th>Titulação Acadêmica</th>
+                        <th>Assunção de Responsabilidade - Mensal</th>
+                        <th>Assunção de Responsabilidade - Única</th>
+                        <th>Soma Total</th>
+                        <th>Soma Acumulada</th>
+                    </tr> 
+                </thead>
+                <tbody> 
+                    ${linhasTabelaHTML}
+                </tbody>
+            </table>
+        </div>
+    `;
 
     
         
