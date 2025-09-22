@@ -5,6 +5,7 @@ let nivel
 let dataInicio
 let pontuRema
 let listaAfastamentos = []
+let listarAperfeicoamentos = []
 
 function criarDataLocal(dataStr) {
     const [ano, mes, dia] = dataStr.split("-").map(Number);
@@ -77,9 +78,57 @@ function removerAfastamento(index) {
     atualizarResumoAfastamento();
 }
 
-function limpar_2() {
+function limpar_afast() {
     document.getElementById('dataAfastamento').value = "";
     document.getElementById('qtdAfastamento').value = "";
+}
+
+function adicionarAperfeicoamento() {
+    const data = document.getElementById('dataAperf').value;
+    const carga = parseFloat(document.getElementById('carga').value);
+
+    if (!data || isNaN(carga)) {
+        alert("Preencha os campos corretamente.");
+        return
+    }
+
+    if(carga < 4) {
+        alert("A carga horária deve ser maior ou igual a 4 horas.");
+        return
+    }
+
+
+    const pontuacao = 0.09 * carga;
+
+    listarAperfeicoamentos.push({ data, carga, pontuacao});
+    atualizarResumoAperfeicoamento();
+
+}
+
+function atualizarResumoAperfeicoamento() {
+    const resumoDiv = document.getElementById('resumoAperfeicoamento');
+    resumoDiv.innerHTML = '<h4>Aperfeiçoamentos:</h4>';
+    resumoDiv.style.display = 'block'
+
+    listarAperfeicoamentos.forEach((item, index) => {
+        const dataFormatada = formatarDataBR(criarDataLocal(item.data));
+        resumoDiv.innerHTML += `
+        <p>
+            Data: ${dataFormatada} | Carga Horária: ${item.carga}h | Pontuação: ${item.pontuacao.toFixed(4)}
+            <button onclick="removerAperfeicoamento(${index})">Remover</button>
+        </p>
+        `; 
+    })
+}
+
+function removerAperfeicoamento(index) {
+    listarAperfeicoamentos.splice(index, 1);
+    atualizarResumoAperfeicoamento();
+}
+
+function limpar_aperf() {
+    document.getElementById('dataAperf').value = "";
+    document.getElementById('carga').value = "";
 }
 
 
@@ -112,6 +161,7 @@ function gerarCarreira() {
         const diaInicio = dataInicio.getDate();
 
         let computarEfetivoEDesempenho = true;
+        let dadosCarreira = [];
 
         if (mesmaData && (diaInicio === 1 || diaInicio > 15)) {
             computarEfetivoEDesempenho = false
@@ -157,7 +207,11 @@ function gerarCarreira() {
         }
 
 
-        const aperfeicoamento = 0
+        const aperfeicoamentoAtual = listarAperfeicoamentos.find(a => {
+            const dataAperf = criarDataLocal(a.data);
+            return dataAperf.toDateString() === dataAtual.toDateString();
+        })
+        const aperfeicoamento = aperfeicoamentoAtual ? aperfeicoamentoAtual.pontuacao : 0;
         const soma345 = efetivo + desempenhoValor + aperfeicoamento
         const titulacao = 0
         const assuncaoMensal = 0
@@ -166,7 +220,11 @@ function gerarCarreira() {
 
         somaAcumulada += soma6789;
 
-        
+        dadosCarreira.push({
+        data: dataFormatada,
+        aperfeicoamento,
+        somaAcumulada
+        })
         
 
         linhasTabelaHTML += `
@@ -192,6 +250,8 @@ function gerarCarreira() {
 
 
     }
+
+    calcularEvolucao(dataInicio, dadosCarreira);
 
     const tabelaCompleta = `
         <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; margin-top: 20px;">
@@ -224,3 +284,77 @@ function gerarCarreira() {
     
 
         }
+
+
+    function limparTabelaCarreira() {
+        document.getElementById('tabelaCarreira').innerHTML = "";
+    }
+
+    function calcularEvolucao (dataInicio, dadosCarreira) {
+        let pontuacaoAcumulada = 0;
+        let aperfeicoamentoAcumulado = 0;
+        let evolucaoEncontrada = false;
+        let resultadoHTML = "";
+
+        for (let i = 0; i < dadosCarreira.length; i++) {
+            const linha = dadosCarreira[i];
+            const data = criarDataLocal(linha.data);
+            pontuacaoAcumulada = linha.aperfeicoamento;
+
+            const mesesDecorridos = (data.getFullYear() - dataInicio.getFullYear()) *12 + (data.getMonth() - dataInicio.getMonth());
+
+            let tipoEvolucao = null;
+            if(mesesDecorridos >= 12 && pontuacaoAcumulada >= 96) {
+                tipoEvolucao = '96';
+            } else if (mesesDecorridos >= 18 && pontuacaoAcumulada >= 48) {
+                tipoEvolucao = "48"
+            }
+
+            if (tipoEvolucao && !evolucaoEncontrada) {
+                evolucaoEncontrada = true;
+
+                const dataPontuacao = formatarDataBR(data);
+                const dia = data.getDate();
+                const dataImplementacao = new Date(data);
+                if (dia > 15) {
+                    dataImplementacao.setMonth(data.getMonth() + 1);
+                }
+                dataImplementacao.setDate(1);
+                const dataImplementacaoFormatada = formatarDataBR(dataImplementacao);
+
+                const intersticio = `${mesesDecorridos} meses`;
+                const pontuacaoRemanescente = tipoEvolucao === "96" ? (pontuacaoAcumulada -48).toFixed(4) : "0.00";
+                const status = aperfeicoamentoAcumulado >= 5.4 ? "Apto" : "Não apto";
+                const observacao = aperfeicoamentoAcumulado >= 5.4 ? "–" : "Não atingiu a pontuação mínima do requisito Aperfeiçoamento";
+
+                resultadoHTML = `
+                <table class = "table table-bordered text-center">
+                    <thead class="table-success">
+                        <tr>
+                            <th>Pontuação Atingida</th>
+                            <th>Data que atingiu a Pontuação</th>
+                            <th>Data de Implementação</th>
+                            <th>Interstício de Evolução</th>
+                            <th>Pontuação Remanescente</th>
+                            <th>Status</th>
+                            <th>Observação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>${pontuacaoAcumulada.toFixed(4)}</td>
+                            <td>${dataPontuacao}</td>
+                            <td>${dataImplementacaoFormatada}</td>
+                            <td>${intersticio}</td>
+                            <td>${pontuacaoRemanescente}</td>
+                            <td>${status}</td>
+                            <td>${observacao}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                `;
+            }
+        }
+        document.getElementById("quadrosEvolucao").innerHTML = resultadoHTML;
+
+    }

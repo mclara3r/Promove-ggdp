@@ -99,7 +99,7 @@
                      <tr>
                             <th colspan="3" style=" text-align: center">
                                 <button type="button" class="btn" onclick="adicionarAfastamento()" style="background-color: #003b19; color: #edebe7;">Adicionar</button>
-                                <button type="button" class="btn" onclick="limpar_2()" style="background-color: #003b19; color: #edebe7;">Limpar</button>
+                                <button type="button" class="btn" onclick="limpar_afast()" style="background-color: #003b19; color: #edebe7;">Limpar</button>
                             </th>
                             
                     </tr>
@@ -124,9 +124,17 @@
                             Pontuação Padrão
                         </th>
                     </tr>
+                </tbody>
+            </table>
+        </div>
+         <div class=" justify-content-center mt-4 w-75 mx-auto">
+            <table class="table table-bordered" style="margin-top: 1px;">
+                <thead></thead>
+                <tbody>
                     <tr class="estilo1">
                         <th colspan="2" style="background-color: #003b19; color: #edebe7;">Aperfeiçoamento</th>
                     </tr>
+
                     <tr>
                         <th>
                             <div class="d-flex align-items-center justify-content-center gap-2" style="font-weight: normal;">
@@ -136,25 +144,31 @@
                         </th>
                         <th>
                             <div class="d-flex align-items-center justify-content-center gap-2" style="font-weight: normal;">
-                                 <label for="data1" class="form-label mb-0" style="font-weight: normal;">Quantidade: </label>
-                                 <input type="number" id="carga" class="form-control w-50 " style="font-weight: normal; border: 2px solid #003b19">
+                                 <label for="data1" class="form-label mb-0" style="font-weight: normal;">Carga horária: </label>
+                                 <input type="number" id="carga" class="form-control w-25 " style="font-weight: normal; border: 2px solid #003b19">
                             </div>
                         </th>
-                    </tr>           
-
+                    </tr>
+                    <tr>
+                            <th colspan="3" style=" text-align: center">
+                                <button type="button" class="btn" onclick="adicionarAperfeicoamento()" style="background-color: #003b19; color: #edebe7;">Adicionar</button>
+                                <button type="button" class="btn" onclick="limpar_aperf()" style="background-color: #003b19; color: #edebe7;">Limpar</button>
+                            </th>
+                            
+                    </tr>          
                 </tbody>
-
-        </table><br>      
-
+        </table>
+        <div id="resumoAperfeicoamento" style="margin-top: 10px; padding: 10px; border: 2px solid #003b19; background-color: #edebe7; color: #003b19; display: none;"></div>      
         </div>
 
         <div class="d-flex justify-content-center mt-4 w-75 mx-auto">
             
-            <button type="button" class="btn" onclick="gerarCarreira()" style="background-color: #003b19; color: #edebe7;" >Computar Pontuação</button>
+            <button type="button" class="btn me-2" onclick="gerarCarreira()" style="background-color: #003b19; color: #edebe7;" >Computar Pontuação</button>
+            <button type="button" class="btn" onclick="limparTabelaCarreira()" style="background-color: #003b19; color:#edebe7;">Limpar Tabela</button>
             
         </div> <br><br><br>
         
-        
+        <div id="quadrosEvolucao" class="mt-4"></div>
         <div id="tabelaCarreira"></div><br><br><br>
 
                     
