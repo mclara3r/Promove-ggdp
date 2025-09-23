@@ -149,6 +149,7 @@ function gerarCarreira() {
         afastamentosPorMes[chave] = (afastamentosPorMes[chave] || 0) + quantidade;
     });
 
+    let dadosCarreira = [];
     for (let i = 0; i< 4000; i++) {
 
         //restrições no 1º mês
@@ -161,7 +162,7 @@ function gerarCarreira() {
         const diaInicio = dataInicio.getDate();
 
         let computarEfetivoEDesempenho = true;
-        let dadosCarreira = [];
+        
 
         if (mesmaData && (diaInicio === 1 || diaInicio > 15)) {
             computarEfetivoEDesempenho = false
