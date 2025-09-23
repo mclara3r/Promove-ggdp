@@ -225,7 +225,7 @@ function gerarCarreira() {
             const dataAperf = criarDataLocal(a.data);
             return dataAperf.toDateString() === dataAtual.toDateString();
         })
-        const aperfeicoamento = aperfeicoamentoAtual ? aperfeicoamentoAtual.pontuacao : 0;
+        const aperfeicoamento = aperfeicoamentoAtual ? parseFloat(aperfeicoamentoAtual.pontuacao) : 0;
         const soma345 = efetivo + desempenhoValor + aperfeicoamento
         const titulacao = 0
         const assuncaoMensal = 0
@@ -269,7 +269,7 @@ function gerarCarreira() {
     const tabelaCompleta = `
         <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; margin-top: 20px;">
             <table class="table table-bordered text-center" style="width: 100%;">
-                <thead class="cabecalho-verde">
+                <thead class="table-success">
                     <tr>
                         <th>Data</th>
                         <th>Afastamentos</th>
@@ -347,8 +347,10 @@ function gerarCarreira() {
                 for (let j = 0; j<=i; j++) {
                     aperfTotalIntersticio += (dadosCarreira[j].aperfeicoamento || 0)
                 }
-                const status = aperfTotalIntersticio >= 5.4 ? "Apto" : "Não apto";
-                const observacao = aperfTotalIntersticio >= 5.4 ? "–" : "Não atingiu a pontuação mínima do requisito Aperfeiçoamento";
+                const arredondado = Math.round(aperfTotalIntersticio*100) / 100
+                console.log("Aperfeiçoamento acumulado até evolução:", aperfTotalIntersticio)
+                const status = arredondado >= 5.4 ? "Apto" : "Não apto";
+                const observacao = arredondado >= 5.4 ? "–" : "Não atingiu a pontuação mínima do requisito Aperfeiçoamento";
 
                 resultadoHTML = `
                 <table class = "table table-bordered text-center">
