@@ -27,29 +27,29 @@
                             <th  style="background-color: #003b19; color: #edebe7;" >Pontuação remanescente: </th>
                         </tr>
                         <tr>
-                            <th>
+                            <td>
                                 <div class="d-flex align-items-center justify-content-center gap-2">
                                     <input type="text" id="nivel" class="form-control w-50" style="font-weight: normal; border: 2px solid #003b19">
                                 </div>
-                            </th>
-                            <th>
+                            </td>
+                            <td>
                                 <div class="d-flex align-items-center justify-content-center gap-2">
-                                    <label for="aperfeiçoamento" class="form-label mb-0" style="font-weight: normal; " >Data: </label>
+                                    <label for="dataInicio" class="form-label mb-0" style="font-weight: normal; " >Data: </label>
                                     <input type="date" id="dataInicio" class="form-control w-50  " style="font-weight: normal; border: 2px solid #003b19">
                                 </div>
                                 
-                            </th>
-                            <th>
+                            </td>
+                            <td>
                                 <div class="d-flex align-items-center justify-content-center gap-2">
                                     <input type="number" id="pontuRema" class="form-control w-50" style="font-weight: normal; border: 2px solid #003b19">
                                 </div>
-                            </th>
+                            </td>
                         </tr>
                         <tr>
-                            <th colspan="3" style=" text-align: center">
+                            <td colspan="3" style=" text-align: center">
                                 <button type="button" class="btn" onclick="enviar_1()" style="background-color: #003b19; color: #edebe7;">Enviar</button>
                                 <button type="button" class="btn" onclick="limpar_1()" style="background-color: #003b19; color: #edebe7;">Limpar</button>
-                            </th>
+                            </td>
                             
                         </tr>
                     </tbody>
@@ -83,24 +83,24 @@
                         </th>
                     </tr>
                     <tr>
-                        <th>
+                        <td>
                             <div class="d-flex align-items-center justify-content-center gap-2" style="font-weight: normal;">
                                 <label for="dataAfastamento" class="form-label mb-0" style="font-weight: normal;">Data: </label>
                                 <input type="date" id="dataAfastamento" class="form-control w-50 " style="font-weight: normal; border: 2px solid #003b19">
                             </div>
-                        </th>
-                        <th>
+                        </td>
+                        <td>
                             <div class="d-flex align-items-center justify-content-center gap-2" style="font-weight: normal;">
                                 <label for="qtdAfastamento" class="form-label mb-0" style="font-weight: normal;">Quantidade: </label>
                                  <input type="number" id="qtdAfastamento" class="form-control w-25" style="font-weight: normal; border: 2px solid #003b19">
                             </div>
-                        </th>
+                        </td>
                     </tr>
                      <tr>
-                            <th colspan="3" style=" text-align: center">
+                            <td colspan="2" style=" text-align: center">
                                 <button type="button" class="btn" onclick="adicionarAfastamento()" style="background-color: #003b19; color: #edebe7;">Adicionar</button>
                                 <button type="button" class="btn" onclick="limpar_afast()" style="background-color: #003b19; color: #edebe7;">Limpar</button>
-                            </th>
+                            </td>
                             
                     </tr>
                    
@@ -138,22 +138,22 @@
                     <tr>
                         <th>
                             <div class="d-flex align-items-center justify-content-center gap-2" style="font-weight: normal;">
-                                 <label for="data1" class="form-label mb-0" style="font-weight: normal;">Data: </label>
+                                 <label for="dataAperf" class="form-label mb-0" style="font-weight: normal;">Data: </label>
                                  <input type="date" id="dataAperf" class="form-control w-50 " style="font-weight: normal; border: 2px solid #003b19">
                             </div>
                         </th>
                         <th>
                             <div class="d-flex align-items-center justify-content-center gap-2" style="font-weight: normal;">
-                                 <label for="data1" class="form-label mb-0" style="font-weight: normal;">Carga horária: </label>
+                                 <label for="carga" class="form-label mb-0" style="font-weight: normal;">Carga horária: </label>
                                  <input type="number" id="carga" class="form-control w-25 " style="font-weight: normal; border: 2px solid #003b19">
                             </div>
                         </th>
                     </tr>
                     <tr>
-                            <th colspan="3" style=" text-align: center">
+                            <td colspan="2" style=" text-align: center">
                                 <button type="button" class="btn" onclick="adicionarAperfeicoamento()" style="background-color: #003b19; color: #edebe7;">Adicionar</button>
                                 <button type="button" class="btn" onclick="limpar_aperf()" style="background-color: #003b19; color: #edebe7;">Limpar</button>
-                            </th>
+                            </td>
                             
                     </tr>          
                 </tbody>
@@ -161,14 +161,13 @@
         <div id="resumoAperfeicoamento" style="margin-top: 10px; padding: 10px; border: 2px solid #003b19; background-color: #edebe7; color: #003b19; display: none;"></div>      
         </div>
 
-        <div class="d-flex justify-content-center mt-4 w-75 mx-auto">
-            
+        <div class="d-flex justify-content-center mt-4 w-75 mx-auto">   
             <button type="button" class="btn me-2" onclick="gerarCarreira()" style="background-color: #003b19; color: #edebe7;" >Computar Pontuação</button>
             <button type="button" class="btn" onclick="limparTabelaCarreira()" style="background-color: #003b19; color:#edebe7;">Limpar Tabela</button>
             
         </div> <br><br><br>
         
-        <div id="quadrosEvolucao" class="mt-4"></div>
+        <div id="tabelaEvolucao" class="mt-4"></div>
         <div id="tabelaCarreira"></div><br><br><br>
 
                     

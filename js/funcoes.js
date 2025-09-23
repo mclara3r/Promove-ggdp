@@ -7,9 +7,18 @@ let pontuRema
 let listaAfastamentos = []
 let listarAperfeicoamentos = []
 
+//-------------------Funções de Data -------------------
+
 function criarDataLocal(dataStr) {
-    const [ano, mes, dia] = dataStr.split("-").map(Number);
-    return new Date(ano, mes - 1, dia, 12);
+    // aceitar o formato yyyy-mm-dd ou dd/mm/yyyy
+    if(dataStr.includes("-")) {
+        const [ano, mes, dia] = dataStr.split("-").map(Number)
+        return new Date(ano, mes-1, dia, 12)
+    } else if (dataStr.includes("/")) {
+        const [ano, mes, dia] = dataStr.split("/").map(Number)
+        return new Date(ano, mes-1, dia, 12)
+    }
+    return null
 }
 
 function formatarDataBR(data) {
@@ -18,6 +27,8 @@ function formatarDataBR(data) {
     const ano = data.getFullYear();
     return `${dia}/${mes}/${ano}`
 }
+
+// ---------------------------Dados iniciais do servidor ---------------------------------------------------
 
 function enviar_1() {
    nivel = document.getElementById('nivel').value
@@ -31,9 +42,7 @@ function enviar_1() {
    document.getElementById("mostrarDataInicio").textContent = "Data de Início: " + dataFormatada;
    document.getElementById("mostrarpontuRema").textContent = "Pontuação Remasnescente: "+ pontuRema;
    document.getElementById('quadroDados').style.display = "block";
-   console.log("Nível: Atual:", nivel)
-   console.log("Data de início: ", dataInicio)
-   console.log("Pontuação Resmascente: ", pontuRema)
+
 }
 
 function limpar_1() {
@@ -42,6 +51,8 @@ function limpar_1() {
     document.getElementById('pontuRema').value = "";
     document.getElementById("quadroDados").style.display = "none"
 }
+
+//------------------------Função Afastamentos -----------------------------------------------------------------------------
 
 function adicionarAfastamento() {
     const data = document.getElementById('dataAfastamento').value;
@@ -81,7 +92,11 @@ function removerAfastamento(index) {
 function limpar_afast() {
     document.getElementById('dataAfastamento').value = "";
     document.getElementById('qtdAfastamento').value = "";
+    listarAperfeicoamentos = []
+    document.getElementById("resumoAfastamento").style.display = "none"
 }
+
+//----------------------Função para Aperfeiçoamentos------------------------------------
 
 function adicionarAperfeicoamento() {
     const data = document.getElementById('dataAperf').value;
@@ -129,8 +144,11 @@ function removerAperfeicoamento(index) {
 function limpar_aperf() {
     document.getElementById('dataAperf').value = "";
     document.getElementById('carga').value = "";
+    listaAfastamentos = []
+    document.getElementById("resumoAperfeicoamento").style.display = "none"
 }
 
+// -------------------------Funções para Gerar Carreira ----------------------------------
 
 function gerarCarreira() {
 
@@ -162,8 +180,6 @@ function gerarCarreira() {
         const diaInicio = dataInicio.getDate();
 
         let computarEfetivoEDesempenho = true;
-        
-
         if (mesmaData && (diaInicio === 1 || diaInicio > 15)) {
             computarEfetivoEDesempenho = false
         }
@@ -199,12 +215,9 @@ function gerarCarreira() {
             const descontoDesempenho = (1.5/30) * diasAfastatados;
 
 
-            efetivo -= descontoEfetivo;
-            desempenhoValor -= descontoDesempenho;
+            efetivo = Math.max(0, efetivo - descontoEfetivo)
+            desempenhoValor = Math.max(0, desempenhoValor - descontoDesempenho);
 
-            //Garante que não fique negativo
-            efetivo = Math.max(0, efetivo);
-            desempenhoValor = Math.max(0,desempenhoValor);
         }
 
 
@@ -219,12 +232,14 @@ function gerarCarreira() {
         const assuncaoUnica = 0
         const soma6789 = soma345 + titulacao + assuncaoMensal + assuncaoUnica;
 
-        somaAcumulada += soma6789;
+        const somaDia = soma6789
+        somaAcumulada += somaDia
 
         dadosCarreira.push({
-        data: dataFormatada,
-        aperfeicoamento,
-        somaAcumulada
+            data: dataAtual.toISOString().split("T")[0], //Guardar ISO
+            aperfeicoamento,
+            somaDia,
+            somaAcumulada
         })
         
 
@@ -243,9 +258,6 @@ function gerarCarreira() {
                 <td>${somaAcumulada.toFixed(4)}</td>
             </tr>
 `;
-
-
-
         //Avança um dia
         dataAtual.setDate(dataAtual.getDate() + 1);
 
@@ -291,6 +303,8 @@ function gerarCarreira() {
         document.getElementById('tabelaCarreira').innerHTML = "";
     }
 
+    //--------------------------Função Evolução--------------------------------------------------------------------------------------
+
     function calcularEvolucao (dataInicio, dadosCarreira) {
         let pontuacaoAcumulada = 0;
         let aperfeicoamentoAcumulado = 0;
@@ -300,7 +314,10 @@ function gerarCarreira() {
         for (let i = 0; i < dadosCarreira.length; i++) {
             const linha = dadosCarreira[i];
             const data = criarDataLocal(linha.data);
-            pontuacaoAcumulada = linha.aperfeicoamento;
+
+            pontuacaoAcumulada += (linha.somaDia || 0)
+            aperfeicoamentoAcumulado += (linha.aperfeicoamento || 0)
+
 
             const mesesDecorridos = (data.getFullYear() - dataInicio.getFullYear()) *12 + (data.getMonth() - dataInicio.getMonth());
 
@@ -316,17 +333,22 @@ function gerarCarreira() {
 
                 const dataPontuacao = formatarDataBR(data);
                 const dia = data.getDate();
+                //data de implementação
                 const dataImplementacao = new Date(data);
-                if (dia > 15) {
-                    dataImplementacao.setMonth(data.getMonth() + 1);
-                }
-                dataImplementacao.setDate(1);
+                dataImplementacao.setMonth(data.getMonth() + 1)
+                dataImplementacao.setDate(1)
+
                 const dataImplementacaoFormatada = formatarDataBR(dataImplementacao);
 
                 const intersticio = `${mesesDecorridos} meses`;
-                const pontuacaoRemanescente = tipoEvolucao === "96" ? (pontuacaoAcumulada -48).toFixed(4) : "0.00";
-                const status = aperfeicoamentoAcumulado >= 5.4 ? "Apto" : "Não apto";
-                const observacao = aperfeicoamentoAcumulado >= 5.4 ? "–" : "Não atingiu a pontuação mínima do requisito Aperfeiçoamento";
+                const pontuacaoRemanescente = (pontuacaoAcumulada -48).toFixed(4)
+                // Recalcular aperfeiçoamento acumulado até o ponto de evolução
+                let aperfTotalIntersticio = 0;
+                for (let j = 0; j<=i; j++) {
+                    aperfTotalIntersticio += (dadosCarreira[j].aperfeicoamento || 0)
+                }
+                const status = aperfTotalIntersticio >= 5.4 ? "Apto" : "Não apto";
+                const observacao = aperfTotalIntersticio >= 5.4 ? "–" : "Não atingiu a pontuação mínima do requisito Aperfeiçoamento";
 
                 resultadoHTML = `
                 <table class = "table table-bordered text-center">
@@ -356,6 +378,6 @@ function gerarCarreira() {
                 `;
             }
         }
-        document.getElementById("quadrosEvolucao").innerHTML = resultadoHTML;
+        document.getElementById("tabelaEvolucao").innerHTML = resultadoHTML;
 
     }
