@@ -33,7 +33,7 @@ function formatarDataBR(data) {
 function enviar_1() {
    nivel = document.getElementById('nivel').value
    dataInicio = document.getElementById('dataInicio').value
-   pontuRema = document.getElementById('pontuRema').value
+   pontuRema = parseFloat(document.getElementById('pontuRema').value) || 0
 
    const partesData = dataInicio.split("-");
    const dataFormatada = partesData[2] + "/" + partesData[1] + "/" + partesData[0]
@@ -155,7 +155,7 @@ function gerarCarreira() {
     const dataInicioStr = document.getElementById('dataInicio').value;
     const partes = dataInicioStr.split('-');
     const dataInicio = new Date(partes[0], partes[1]-1, partes[2]) 
-    let somaAcumulada = 0;
+    let somaAcumulada = pontuRema;
     let dataAtual = new Date(dataInicio);
     let linhasTabelaHTML = "";
 
@@ -241,23 +241,39 @@ function gerarCarreira() {
             somaDia,
             somaAcumulada
         })
-        
 
-        linhasTabelaHTML += `
-            <tr>
-                <td>${dataFormatada}</td>
-                <td>${afastamento}</td>
-                <td>${efetivo.toFixed(4)}</td>
-                <td>${desempenhoValor.toFixed(4)}</td>
-                <td>${aperfeicoamento.toFixed(4)}</td>
-                <td>${soma345.toFixed(4)}</td>
-                <td>${titulacao.toFixed(1)}</td>
-                <td>${assuncaoMensal.toFixed(4)}</td>
-                <td>${assuncaoUnica.toFixed(4)}</td>
-                <td>${soma6789.toFixed(4)}</td>
-                <td>${somaAcumulada.toFixed(4)}</td>
-            </tr>
-`;
+        if(i===0){ 
+            linhasTabelaHTML += `
+                <tr>
+                    <td>${dataFormatada}</td>
+                    <td>${afastamento}</td>
+                    <td>${efetivo.toFixed(4)}</td>
+                    <td>${desempenhoValor.toFixed(4)}</td>
+                    <td>${aperfeicoamento.toFixed(4)}</td>
+                    <td>${soma345.toFixed(4)}</td>
+                    <td>${titulacao.toFixed(1)}</td>
+                    <td>${assuncaoMensal.toFixed(4)}</td>
+                    <td>${assuncaoUnica.toFixed(4)}</td>
+                    <td>${soma6789.toFixed(4)}</td>
+                    <td>${pontuRema.toFixed(4)}</td>
+                </tr>` 
+            } else {
+                linhasTabelaHTML += `
+                <tr>
+                    <td>${dataFormatada}</td>
+                    <td>${afastamento}</td>
+                    <td>${efetivo.toFixed(4)}</td>
+                    <td>${desempenhoValor.toFixed(4)}</td>
+                    <td>${aperfeicoamento.toFixed(4)}</td>
+                    <td>${soma345.toFixed(4)}</td>
+                    <td>${titulacao.toFixed(1)}</td>
+                    <td>${assuncaoMensal.toFixed(4)}</td>
+                    <td>${assuncaoUnica.toFixed(4)}</td>
+                    <td>${soma6789.toFixed(4)}</td>
+                    <td>${somaAcumulada.toFixed(4)}</td>
+                </tr>` 
+            }
+
         //Avança um dia
         dataAtual.setDate(dataAtual.getDate() + 1);
 
@@ -281,7 +297,7 @@ function gerarCarreira() {
                         <th>Assunção de Responsabilidade - Mensal</th>
                         <th>Assunção de Responsabilidade - Única</th>
                         <th>Soma Total</th>
-                        <th>Soma Acumulada</th>
+                        <th>Pontuação remanescente e acumulada</th>
                     </tr> 
                 </thead>
                 <tbody> 
@@ -301,6 +317,7 @@ function gerarCarreira() {
 
     function limparTabelaCarreira() {
         document.getElementById('tabelaCarreira').innerHTML = "";
+        document.getElementById('tabelaEvolucao').innerHTML = "";
     }
 
     //--------------------------Função Evolução--------------------------------------------------------------------------------------
@@ -311,6 +328,10 @@ function gerarCarreira() {
         let evolucaoEncontrada = false;
         let resultadoHTML = "";
 
+        const niveis = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S"];
+        const nivelAtualIndex = niveis.indexOf(nivel);
+        const proximoNivel = nivelAtualIndex >= 0 && nivelAtualIndex < niveis.length-1 ? niveis[nivelAtualIndex+1] : "-"
+        
         for (let i = 0; i < dadosCarreira.length; i++) {
             const linha = dadosCarreira[i];
             const data = criarDataLocal(linha.data);
@@ -350,31 +371,51 @@ function gerarCarreira() {
                 const arredondado = Math.round(aperfTotalIntersticio*100) / 100
                 console.log("Aperfeiçoamento acumulado até evolução:", aperfTotalIntersticio)
                 const status = arredondado >= 5.4 ? "Apto" : "Não apto";
-                const observacao = arredondado >= 5.4 ? "–" : "Não atingiu a pontuação mínima do requisito Aperfeiçoamento";
+                
+                let linhasTabela = "";
+                if(status === "Apto") {
+                  linhasTabela = `
+                  <tr>
+                        <td>${status}</td>
+                        <td>${proximoNivel}</td>
+                        <td>${dataPontuacao}</td>
+                        <td>${dataImplementacaoFormatada}</td>
+                        <td>${intersticio}</td>
+                        <td>${pontuacaoAcumulada.toFixed(4)}</td>
+                        <td>${pontuacaoRemanescente}</td>
+                        <td>-</td>
+                    </tr>`  
+                } else {
+                    linhasTabela = `
+                    <tr>
+                        <td>${status}</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>Não concluiu a carga horária mínima de 60 horas no interstício de evolução para o requisito Aperfeiçoamento.</td>
+                    </tr>
+                    `
+                }
 
                 resultadoHTML = `
                 <table class = "table table-bordered text-center">
                     <thead class="table-success">
                         <tr>
-                            <th>Pontuação Atingida</th>
+                            <th>Status</th>
+                            <th>Próximo Nível</th>
                             <th>Data que atingiu a Pontuação</th>
                             <th>Data de Implementação</th>
                             <th>Interstício de Evolução</th>
+                            <th>Pontuação Atingida</th>
                             <th>Pontuação Remanescente</th>
-                            <th>Status</th>
                             <th>Observação</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>${pontuacaoAcumulada.toFixed(4)}</td>
-                            <td>${dataPontuacao}</td>
-                            <td>${dataImplementacaoFormatada}</td>
-                            <td>${intersticio}</td>
-                            <td>${pontuacaoRemanescente}</td>
-                            <td>${status}</td>
-                            <td>${observacao}</td>
-                        </tr>
+                        ${linhasTabela}
                     </tbody>
                 </table>
                 `;
