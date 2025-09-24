@@ -14,7 +14,7 @@
         <h1 class="text-center" style="color: #003b19;">PROMOVE</h1><br>
         
         <h3 class="estilo2" style="margin-bottom: 1px;">Dados do servidor</h3><br>
-        <div class="d-flex flex-column justify-content-center mt-4 w-75 mx-auto" >
+        <div class="d-flex flex-column justify-content-center mt-4 mx-auto" >
             <div class="w-100">
                 <table class="table table-bordered" style="margin-top: 1px;">
                     <thead>
@@ -66,9 +66,12 @@
         
          
         
+       
+       
+       
         <h3 class="estilo2" style="margin-bottom: 1px; margin-top: 50px;" >Critérios Obrigatórios</h3><br>
 
-        <div class=" justify-content-center mt-4 w-75 mx-auto">
+        <div class=" justify-content-center mt-4  mx-auto">
             <table class="table table-bordered" style="margin-top: 1px;">
                 <thead>
 
@@ -78,7 +81,7 @@
                         <th  colspan="2" style="background-color: #003b19; color: #edebe7;" >Tempo de Efetivo Exercício</th>
                     </tr>
                     <tr>
-                        <th colspan="2" style="font-weight: normal;">
+                        <th colspan="2" style="font-weight: 500;">
                             Afastamentos
                         </th>
                     </tr>
@@ -111,7 +114,7 @@
         </div>
 
 
-        <div class=" justify-content-center mt-4 w-75 mx-auto">
+        <div class=" justify-content-center mt-4  mx-auto">
             <table class="table table-bordered" style="margin-top: 1px;">
                 <thead></thead>
                 <tbody>
@@ -120,14 +123,14 @@
                         <th colspan="2" style="background-color: #003b19; color: #edebe7;">Desempenho</th>
                     </tr>
                     <tr>
-                        <th colspan="2" style="font-weight: normal;">
+                        <th colspan="2" style="font-weight: 500;">
                             Pontuação Padrão
                         </th>
                     </tr>
                 </tbody>
             </table>
         </div>
-         <div class=" justify-content-center mt-4 w-75 mx-auto">
+         <div class=" justify-content-center mt-4 mx-auto">
             <table class="table table-bordered" style="margin-top: 1px;">
                 <thead></thead>
                 <tbody>
@@ -161,11 +164,82 @@
         <div id="resumoAperfeicoamento" style="margin-top: 10px; padding: 10px; border: 2px solid #003b19; background-color: #edebe7; color: #003b19; display: none;"></div>      
         </div>
 
+       
+       
+
+
+
+
+       
+       
+        <h3 class="estilo2" style="margin-bottom: 1px; margin-top: 50px;" >Critérios Aceleradores</h3><br>
+
+        <div class=" justify-content-center mt-4 w-100 mx-auto">
+            <table class="table table-bordered" style="margin-top: 1px;">
+                <thead></thead>
+                <tbody>
+                    <tr class="estilo1" >
+                        <th  colspan="3" style="background-color: #003b19; color: #edebe7;" >Assunção de Responsabilidades</th>
+                    </tr>
+                    <tr>
+                        <th class="text-center align-middle">
+                            <div class="d-flex justify-content-center">
+                            <select class="form-select form-select-sm fw-semibold w-100 text-wrap" aria-label="large select example" style="max-width: 300px;">
+                                <option selected>PONTUAÇÃO POR EXERCÍCIO DE CARGO EM COMISSÃO</option>
+                                <option value="0.5">DAI-2, DAI-3, DAID-3, DAID-4, DAID-5, DAID-6, DAID-7, DAID-8, DAID-9, DAID-10, DAID-11, DAID-12, DAID-13 e DAID-14</option>
+                                <option value="0.667">DAI-1, DAID-1, DAID-1B, DAID-2, AE-1, AE-2</option>
+                                <option value="0.8">DAS-5, DAS-6, DAS-7, DAID-1A, AEG</option>
+                                <option value="0.889">DAS-3, DAS-4</option>
+                                <option value="1">DAS-1, DAS-2</option>
+                            </select>
+                            </div> 
+                        </th>
+                        <th>
+                            <div class="d-flex align-items-center justify-content-center" style="font-weight: normal;">
+                                <label for="dataInicioResp" class="form-label mb-0 me-2" >Data Início: </label>
+                                <input type="date" id="dataInicioResp" class="form-control w-100" style="font-weight: normal; border: 2px solid #003b19">
+                            </div>
+                        </th>
+                        <th>
+                            <div class="d-flex align-items-center justify-content-center " style="font-weight: normal;">
+                                <label for="dataFimResp" class="form-label mb-0" style=" margin-right: 4px;" >Data Fim: </label>
+                                <input type="date" id="dataFimResp" class="form-control w-100" style="font-weight: normal; border: 2px solid #003b19; max-width: 150px;">
+                                <div class="form-check align-self-center" style=" margin-left: 4px;">
+                                    <input type="checkbox" class="form-check-input" id="semDataFim" style="border: 2px solid #003b19;">
+                                    <label for="semDataFim" class="form-check-label" style="color: #003b19; font-size: 0.8rem; margin-right: 4px">Sem data fim</label>
+                                </div>
+                                <button type="button" id="adicionarAssuncao" class="btn btn--sm" style="border: 2px solid #003b19; color: #edebe7; background-color: #003b19; font-weight: bold; font-size: 1.2rem; margin-left: 20px;">+</button>
+                            </div>
+                        </th>
+
+                    </tr>
+                    
+
+                </tbody>
+
+            </table>
+        <div id=""  style="margin-top: 10px; padding: 10px; border: 2px solid #003b19; background-color: #edebe7; color: #003b19; display: none;"></div>     
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
         <div class="d-flex justify-content-center mt-4 w-75 mx-auto">   
             <button type="button" class="btn me-2" onclick="gerarCarreira()" style="background-color: #003b19; color: #edebe7;" >Computar Pontuação</button>
             <button type="button" class="btn" onclick="limparTabelaCarreira()" style="background-color: #003b19; color:#edebe7;">Limpar Tabela</button>
             
         </div> <br><br><br>
+
+          
         
         <div id="tabelaEvolucao" class="mt-4"></div>
         <div id="tabelaCarreira"></div><br><br><br>
