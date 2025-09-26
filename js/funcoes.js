@@ -301,7 +301,7 @@ function gerarCarreira() {
     //--------------------------Função Evolução--------------------------------------------------------------------------------------
 
     function calcularEvolucao (dataInicio, dadosCarreira) {
-        let pontuacaoAcumulada = 0;
+        let pontuacaoAcumulada = pontuRema;
         let aperfeicoamentoAcumulado = 0;
         let evolucaoEncontrada = false;
         let resultadoHTML = "";
