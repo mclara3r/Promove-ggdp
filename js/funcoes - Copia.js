@@ -2,6 +2,7 @@
 
 let desempenho = 1.5
 let nivel
+let dataInicio
 let pontuRema
 let listaAfastamentos = []
 let listarAperfeicoamentos = []
@@ -54,24 +55,16 @@ function limpar_1() {
 //------------------------Função Afastamentos -----------------------------------------------------------------------------
 
 function adicionarAfastamento() {
-    const mesAno = document.getElementById('mesAfastamento').value;
+    const data = document.getElementById('dataAfastamento').value;
     const quantidade = parseInt(document.getElementById('qtdAfastamento').value);
 
-    if (!mesAno || isNaN(quantidade)) {
+    if (!data || isNaN(quantidade)) {
         alert("Preencha os campos corretamente.");
         return;
     }
 
-    //Verifica se já existe afastamento nesse mês
-    const existe = listaAfastamentos.some(a => a.mesAno ===mesAno);
-    if(existe) {
-        alert("Já existe afastamento lançado para este mês. Remova ntes de adicionar novamente.")
-        return
-    }
-
-    listaAfastamentos.push({mesAno, quantidade});
+    listaAfastamentos.push({data, quantidade});
     atualizarResumoAfastamento();
-    limpar_afast()
 }
 
 function atualizarResumoAfastamento() {
@@ -80,10 +73,10 @@ function atualizarResumoAfastamento() {
     resumoDiv.style.display = "block"
 
     listaAfastamentos.forEach((item, index) => {
-        const [ano, mes] = item.mesAno.split("-");
+        const dataFormatada = formatarDataBR(criarDataLocal(item.data))
         resumoDiv.innerHTML += `
         <p>
-            Mês/Ano: ${mes}/${ano} | Quantidade: ${item.quantidade}
+            Data: ${dataFormatada} | Quantidade: ${item.quantidade}
             <button onclick="removerAfastamento(${index})">Remover</button>
         </p>
         `;
@@ -93,17 +86,14 @@ function atualizarResumoAfastamento() {
 
 function removerAfastamento(index) {
     listaAfastamentos.splice(index, 1);
-    if(listaAfastamentos.length === 0) {
-        document.getElementById("resumoAfastamento").style.display = "none";
-    } else{
     atualizarResumoAfastamento();
 }
-}
-
 
 function limpar_afast() {
-    document.getElementById('mesAfastamento').value = "";
+    document.getElementById('dataAfastamento').value = "";
     document.getElementById('qtdAfastamento').value = "";
+    listarAperfeicoamentos = []
+    document.getElementById("resumoAfastamento").style.display = "none"
 }
 
 //----------------------Função para Aperfeiçoamentos------------------------------------
@@ -154,7 +144,7 @@ function removerAperfeicoamento(index) {
 function limpar_aperf() {
     document.getElementById('dataAperf').value = "";
     document.getElementById('carga').value = "";
-    listarAperfeicoamentos = []
+    listaAfastamentos = []
     document.getElementById("resumoAperfeicoamento").style.display = "none"
 }
 
@@ -163,102 +153,134 @@ function limpar_aperf() {
 function gerarCarreira() {
 
     const dataInicioStr = document.getElementById('dataInicio').value;
-    const dataInicioObj = criarDataLocal(dataInicioStr);
-    if(!dataInicioObj) {
-        alert("A data de início é inválida.");
-        return
-    }
-    let dataAtual = new Date(dataInicioObj.getFullYear(), dataInicioObj.getMonth(),1)
-
+    const partes = dataInicioStr.split('-');
+    const dataInicio = new Date(partes[0], partes[1]-1, partes[2]) 
     let somaAcumulada = pontuRema;
+    let dataAtual = new Date(dataInicio);
     let linhasTabelaHTML = "";
-    let dadosCarreira = [];
 
-    //agrupar aperfeiçoamentos por mês/ano
-    const aperfPorMes = {}
-    listarAperfeicoamentos.forEach(({data, pontuacao}) => {
-        const [ano, mes] = data.split("-"); 
+    //agrupar afastamentos por mês
+    const afastamentosPorMes = {};
+    listaAfastamentos.forEach(({ data, quantidade}) => {
+        const [ano, mes] = data.split("-");
         const chave = `${ano}-${mes}`;
-        aperfPorMes[chave] = (aperfPorMes[chave] || 0) + pontuacao
+        afastamentosPorMes[chave] = (afastamentosPorMes[chave] || 0) + quantidade;
     });
 
-    //criar loop mensal (até 400 meses = 33 anos, arbitrário)
-    
-    for (let i = 0; i<400; i++) {
-        const dia = dataAtual.getDate();
-        const mes = String(dataAtual.getMonth() + 1).padStart(2, "0");
-        const ano = dataAtual.getFullYear();
-        const chaveMes = `${ano}-${mes}`;
+    let dadosCarreira = [];
+    for (let i = 0; i< 4000; i++) {
 
-        //valores básicos
+        //restrições no 1º mês
+        const mesAtual = dataAtual.getMonth();
+        const anoAtual = dataAtual.getFullYear();
+        const mesInicio = dataInicio.getMonth();
+        const anoInicio = dataInicio.getFullYear();
 
-        let efetivo = 0;
-        let desempenhoValor = 0;
-        let aperfeicoamento = 0;
+        const mesmaData = mesAtual === mesInicio && anoAtual === anoInicio;
+        const diaInicio = dataInicio.getDate();
 
-        if (dia === 1) {
-            //soma padrão
-            efetivo = 0.2;
-            desempenhoValor = 1.5;
-
-            //pega afastamentos do mês anterior
-            const mesAnterior = dataAtual.getMonth() === 0 ? 12 : dataAtual.getMonth();
-            const anoAnterior = dataAtual.getMonth() === 0 ? ano -1 : ano;
-            const chaveAnterior = `${anoAnterior}-${String(mesAnterior).padStart(2,"0")}`
-            const diasAfastados = listaAfastamentos.find(a => a.mesAno === chaveAnterior)?.quantidade || 0;
-
-            //aplica desconto 
-            const descontoEfetivo = (0.2/30) * diasAfastados;
-            const descontoDesempenho = (1.5/30) * diasAfastados;
-            efetivo = Math.max(0, efetivo - descontoEfetivo);
-            desempenhoValor = Math.max(0, desempenhoValor - descontoDesempenho);
-
-            //aperfeiçoamentos do mês anterior
-            aperfeicoamento = aperfPorMes[chaveAnterior] || 0;
-
-            //soma total
-            const soma345 = efetivo + desempenhoValor + aperfeicoamento;
-            const titulacao = 0;
-            const assuncaoMensal = 0;
-            const assuncaoUnica = 0;
-            const soma6789 = soma345 + titulacao + assuncaoMensal + assuncaoUnica;
-
-            somaAcumulada += soma6789
-
-            // salvar linha
-
-            dadosCarreira.push({
-                data: dataAtual.toISOString().split("T")[0],
-                aperfeicoamento,
-                somaDia: soma6789,
-                somaAcumulada
-            });
-            const dataFormatada = formatarDataBR(dataAtual);
-            linhasTabelaHTML += `
-            <tr>
-                <td>${dataFormatada}</td>
-                <td>${diasAfastados}</td>
-                <td>${efetivo.toFixed(4)}</td>
-                <td>${desempenhoValor.toFixed(4)}</td>
-                <td>${aperfeicoamento.toFixed(4)}</td>
-                <td>${soma345.toFixed(4)}</td>
-                <td>${titulacao.toFixed(4)}</td>
-                <td>${assuncaoMensal.toFixed(4)}</td>
-                <td>${assuncaoUnica.toFixed(4)}</td>
-                <td>${soma6789.toFixed(4)}</td>
-                <td>${somaAcumulada.toFixed(4)}</td>
-            </tr>`
+        let computarEfetivoEDesempenho = true;
+        if (mesmaData && (diaInicio === 1 || diaInicio > 15)) {
+            computarEfetivoEDesempenho = false
         }
 
-        //avança para próximo mês
-        dataAtual.setMonth(dataAtual.getMonth() + 1);
+        //soma afastamentos 
+
+        const afastamentoAtual = listaAfastamentos.find(a => {
+            const dataAfast = criarDataLocal(a.data);
+            return dataAfast.toDateString() === dataAtual.toDateString();
+        });
+
+        const afastamento = afastamentoAtual ? afastamentoAtual.quantidade : 0;
+        const dataFormatada = formatarDataBR(dataAtual)
+        const dia = dataAtual.getDate();
+
+        //Inicializa os valores
+        let efetivo = 0
+        let desempenhoValor = 0
+
+        if (dia === 1 && computarEfetivoEDesempenho) {
+            efetivo = 0.2
+            desempenhoValor = 1.5
+
+            //mês anterior
+            const mesAnterior = dataAtual.getMonth() === 0 ? 11 : dataAtual.getMonth() -1;
+            const anoAnterior = dataAtual.getMonth() === 0 ? dataAtual.getFullYear() - 1 : dataAtual.getFullYear();
+            const chaveMesAnterior = `${anoAnterior}-${String(mesAnterior + 1).padStart(2, '0')}`;
+
+            const diasAfastatados = afastamentosPorMes[chaveMesAnterior] || 0;
+
+            //aplicar descontos
+            const descontoEfetivo = (0.2/30) * diasAfastatados;
+            const descontoDesempenho = (1.5/30) * diasAfastatados;
+
+
+            efetivo = Math.max(0, efetivo - descontoEfetivo)
+            desempenhoValor = Math.max(0, desempenhoValor - descontoDesempenho);
+
+        }
+
+
+        const aperfeicoamentoAtual = listarAperfeicoamentos.find(a => {
+            const dataAperf = criarDataLocal(a.data);
+            return dataAperf.toDateString() === dataAtual.toDateString();
+        })
+        const aperfeicoamento = aperfeicoamentoAtual ? parseFloat(aperfeicoamentoAtual.pontuacao) : 0;
+        const soma345 = efetivo + desempenhoValor + aperfeicoamento
+        const titulacao = 0
+        const assuncaoMensal = 0
+        const assuncaoUnica = 0
+        const soma6789 = soma345 + titulacao + assuncaoMensal + assuncaoUnica;
+
+        const somaDia = soma6789
+        somaAcumulada += somaDia
+
+        dadosCarreira.push({
+            data: dataAtual.toISOString().split("T")[0], //Guardar ISO
+            aperfeicoamento,
+            somaDia,
+            somaAcumulada
+        })
+
+        if(i===0){ 
+            linhasTabelaHTML += `
+                <tr>
+                    <td>${dataFormatada}</td>
+                    <td>${afastamento}</td>
+                    <td>${efetivo.toFixed(4)}</td>
+                    <td>${desempenhoValor.toFixed(4)}</td>
+                    <td>${aperfeicoamento.toFixed(4)}</td>
+                    <td>${soma345.toFixed(4)}</td>
+                    <td>${titulacao.toFixed(1)}</td>
+                    <td>${assuncaoMensal.toFixed(4)}</td>
+                    <td>${assuncaoUnica.toFixed(4)}</td>
+                    <td>${soma6789.toFixed(4)}</td>
+                    <td>${pontuRema.toFixed(4)}</td>
+                </tr>` 
+            } else {
+                linhasTabelaHTML += `
+                <tr>
+                    <td>${dataFormatada}</td>
+                    <td>${afastamento}</td>
+                    <td>${efetivo.toFixed(4)}</td>
+                    <td>${desempenhoValor.toFixed(4)}</td>
+                    <td>${aperfeicoamento.toFixed(4)}</td>
+                    <td>${soma345.toFixed(4)}</td>
+                    <td>${titulacao.toFixed(1)}</td>
+                    <td>${assuncaoMensal.toFixed(4)}</td>
+                    <td>${assuncaoUnica.toFixed(4)}</td>
+                    <td>${soma6789.toFixed(4)}</td>
+                    <td>${somaAcumulada.toFixed(4)}</td>
+                </tr>` 
+            }
+
+        //Avança um dia
+        dataAtual.setDate(dataAtual.getDate() + 1);
 
 
     }
-    
-       
 
-    calcularEvolucao(dataInicioObj, dadosCarreira);
+    calcularEvolucao(dataInicio, dadosCarreira);
 
     const tabelaCompleta = `
         <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; margin-top: 20px;">
@@ -272,8 +294,8 @@ function gerarCarreira() {
                         <th>Aperfeiçoamento</th>
                         <th>Soma Critérios Obrigatórios</th>
                         <th>Titulação Acadêmica</th>
-                        <th>Assunção de Resp. - Mensal</th>
-                        <th>Assunção de Resp. - Única</th>
+                        <th>Assunção de Responsabilidade - Mensal</th>
+                        <th>Assunção de Responsabilidade - Única</th>
                         <th>Soma Total</th>
                         <th>Pontuação remanescente e acumulada</th>
                     </tr> 
@@ -331,6 +353,8 @@ function gerarCarreira() {
                 evolucaoEncontrada = true;
 
                 const dataPontuacao = formatarDataBR(data);
+                const dia = data.getDate();
+                //data de implementação
                 const dataImplementacao = new Date(data);
                 dataImplementacao.setMonth(data.getMonth() + 1)
                 dataImplementacao.setDate(1)
